@@ -179,6 +179,7 @@
       cursor: pointer;
       box-shadow: 0 4px 15px rgba(255, 0, 96, 0.4);
       transition: transform 0.3s ease;
+      margin: 5px;
     }
     .action-btn:hover {
       transform: scale(1.08);
@@ -199,16 +200,40 @@
     <button id="btnKlikDisini" class="action-btn">Klik Disini ❤️</button>
   </div>
 
-  <!-- TAHAP 1: Pengecekan Earphone -->
+  <!-- TAHAP 1: Pengecekan Earphone (Multi-Branch Modal) -->
   <div id="earphoneScreen" class="modal">
     <div class="modal-content">
-      <h2 id="earphoneTitle">Siapkan earphone-nya maniezz 🎧</h2>
-      <p id="earphoneText" style="margin-bottom: 10px;">Udah dipake earphone-nya?</p>
       
-      <div id="earphoneButtons" style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
-        <button id="btnYa" class="action-btn">Ya</button>
-        <button id="btnTidak" class="action-btn btn-secondary">Tidak</button>
+      <!-- Bagian Utama: Pertanyaan Awal -->
+      <div class="eb-slide active" id="ebSlide1">
+        <h2>Siapkan earphone-nya maniezz 🎧</h2>
+        <p style="margin-bottom: 10px;">Udah dipake earphone-nya?</p>
+        <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
+          <button id="btnYa" class="action-btn">Ya</button>
+          <button id="btnTidak" class="action-btn btn-secondary">Tidak</button>
+        </div>
       </div>
+
+      <!-- Cabang Jika Pilih "Tidak" -->
+      <div class="eb-slide" id="ebSlideTidak">
+        <h2>Ngeyel! 🛑</h2>
+        <p style="margin-bottom: 20px;"><strong>PAKEE NGGAAAA, KU TONJOK LU MET KALO GAK DIPAKE 😡</strong></p>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <button id="btnIyaKupake" class="action-btn">Iya ini kupake</button>
+          <button id="btnBiarin" class="action-btn btn-secondary">Biarin</button>
+        </div>
+      </div>
+
+      <!-- Cabang Jika Pilih "Biarin" -->
+      <div class="eb-slide" id="ebSlideBiarin">
+        <h2>Allahurabb.. 😭</h2>
+        <p style="margin-bottom: 20px;"><strong>PAKEE NGGAAKKK!! 🤬</strong></p>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <button id="btnIyee" class="action-btn">Iyee iyeee</button>
+          <button id="btnYaudah" class="action-btn btn-secondary">Yaudah dehh ini kupake</button>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -294,11 +319,16 @@
     const btnKlikDisini = document.getElementById('btnKlikDisini');
 
     const earphoneScreen = document.getElementById('earphoneScreen');
-    const earphoneTitle = document.getElementById('earphoneTitle');
-    const earphoneText = document.getElementById('earphoneText');
+    const ebSlide1 = document.getElementById('ebSlide1');
+    const ebSlideTidak = document.getElementById('ebSlideTidak');
+    const ebSlideBiarin = document.getElementById('ebSlideBiarin');
+
     const btnYa = document.getElementById('btnYa');
     const btnTidak = document.getElementById('btnTidak');
-    const earphoneButtons = document.getElementById('earphoneButtons');
+    const btnIyaKupake = document.getElementById('btnIyaKupake');
+    const btnBiarin = document.getElementById('btnBiarin');
+    const btnIyee = document.getElementById('btnIyee');
+    const btnYaudah = document.getElementById('btnYaudah');
     
     const readyScreen = document.getElementById('readyScreen');
     const btnCus = document.getElementById('btnCus');
@@ -343,9 +373,9 @@
       }
     });
 
-    // --- LOGIKA TRANSISI ANTAR LAYAR & AUDIO ---
+    // --- LOGIKA PERCABANGAN DIALOG EARPHONE ---
 
-    // Aksi 0: Tombol "Klik Disini" Ditekan di Awal
+    // 1. Klik Tombol "Klik Disini" di Awal
     btnKlikDisini.addEventListener('click', () => {
       introScreen.classList.add('hidden');
       setTimeout(() => {
@@ -353,7 +383,7 @@
       }, 300);
     });
 
-    // Fungsi untuk memunculkan layar transisi "Cus"
+    // Fungsi helper untuk pindah ke layar "Ready" (CUSSSS)
     function tampilkanLayarReady() {
       earphoneScreen.classList.remove('show');
       setTimeout(() => {
@@ -361,25 +391,39 @@
       }, 400);
     }
 
-    // Aksi 1A: Jika Tombol "Tidak" Ditekan
-    btnTidak.addEventListener('click', () => {
-      earphoneTitle.innerText = "Ngeyel! 🛑";
-      earphoneText.innerHTML = "<strong>PAKEE NGGAAAA, KU TONJOK LU MET KALO GAK DIPAKE 😡</strong>";
-      
-      // Ubah tombol pilihan menjadi satu tombol lanjut ke layar "Ready"
-      earphoneButtons.innerHTML = `<button id="btnLanjutBaru" class="action-btn">Oke, paham!</button>`;
-      
-      document.getElementById('btnLanjutBaru').addEventListener('click', () => {
-        tampilkanLayarReady();
-      });
-    });
-
-    // Aksi 1B: Jika Tombol "Ya" Ditekan langsung
+    // 2. Jika pilih "Ya" di awal -> langsung ke layar Ready
     btnYa.addEventListener('click', () => {
       tampilkanLayarReady();
     });
 
-    // Aksi 1.5: Saat tombol "CUSSSS" ditekan, barulah BGM berputar dan masuk ke Kartu Ucapan
+    // 3. Jika pilih "Tidak" di awal -> pindah ke slide "Ngeyel!"
+    btnTidak.addEventListener('click', () => {
+      ebSlide1.classList.remove('active');
+      ebSlideTidak.classList.add('active');
+    });
+
+    // 4. Jika di slide "Ngeyel!" pilih "Iya ini kupake" -> langsung ke layar Ready
+    btnIyaKupake.addEventListener('click', () => {
+      tampilkanLayarReady();
+    });
+
+    // 5. Jika di slide "Ngeyel!" pilih "Biarin" -> pindah ke slide "Allahurabb.."
+    btnBiarin.addEventListener('click', () => {
+      ebSlideTidak.classList.remove('active');
+      ebSlideBiarin.classList.add('active');
+    });
+
+    // 6. Jika di slide "Allahurabb.." pilih "Iyee iyeee" atau "Yaudah dehh ini kupake" -> ke layar Ready
+    btnIyee.addEventListener('click', () => {
+      tampilkanLayarReady();
+    });
+    btnYaudah.addEventListener('click', () => {
+      tampilkanLayarReady();
+    });
+
+    // --- TRANSISI LANJUTAN ---
+
+    // Saat tombol "CUSSSS" ditekan -> putar BGM dan masuk ke Kartu Ucapan Multi-Slide
     btnCus.addEventListener('click', () => {
       readyScreen.classList.remove('show');
       
@@ -391,7 +435,7 @@
       }, 400);
     });
 
-    // Aksi 2: Logika Pindah Slide Kartu Ucapan
+    // Logika Pindah Slide Kartu Ucapan
     const nextBtns = document.querySelectorAll('.next-btn');
     const slides = document.querySelectorAll('.slide');
 
@@ -407,18 +451,15 @@
       });
     });
 
-    // Aksi 3: Tombol "Ini Hadiahmu" Ditekan
+    // Tombol "Ini Hadiahmu" Ditekan -> Matikan BGM, Nyalakan Musik Utama & Lirik
     btnHadiah.addEventListener('click', () => {
       modal.classList.remove('show');
       
-      // Matikan BGM Kartu Ucapan
       bgmPlayer.pause();
       bgmPlayer.currentTime = 0;
       
       setTimeout(() => {
         musicCard.classList.add('show');
-        
-        // Memutar Lagu Utama
         mainAudio.play().catch(() => {
           console.log("Autoplay diblokir browser, putar manual.");
         });
