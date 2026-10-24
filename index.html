@@ -23,24 +23,8 @@
       padding: 20px;
       overflow: hidden;
     }
-    
-    /* 1. Layar Awal */
-    .intro-screen {
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: linear-gradient(135deg, #0f172a, #1e293b);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 2000;
-      transition: opacity 0.5s ease, visibility 0.5s ease;
-    }
-    .intro-screen.hidden {
-      opacity: 0;
-      visibility: hidden;
-    }
 
-    /* 2. Kartu Ucapan Pop-Up */
+    /* Modal Layar Penuh */
     .modal {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
@@ -57,6 +41,7 @@
       opacity: 1;
       visibility: visible;
     }
+    
     .modal-content {
       background: #1e293b;
       padding: 40px 30px;
@@ -97,7 +82,7 @@
       margin-bottom: 25px;
     }
 
-    /* 3. Kotak Musik */
+    /* Kotak Musik Utama */
     .card {
       background: rgba(255, 255, 255, 0.05);
       backdrop-filter: blur(10px);
@@ -171,7 +156,7 @@
       background: linear-gradient(135deg, #ff4b91, #ff0060);
       color: white;
       border: none;
-      padding: 12px 30px;
+      padding: 12px 25px;
       border-radius: 25px;
       font-size: 1rem;
       font-weight: 600;
@@ -182,16 +167,28 @@
     .action-btn:hover {
       transform: scale(1.08);
     }
+    .btn-secondary {
+      background: #475569;
+      box-shadow: none;
+    }
   </style>
 </head>
 <body>
 
-  <!-- Audio Backsound (disembunyikan, berputar berulang) -->
+  <!-- Audio Backsound -->
   <audio id="bgmPlayer" loop src="backsound.mp3"></audio>
 
-  <!-- TAHAP 1: Layar Awal -->
-  <div id="introScreen" class="intro-screen">
-    <button id="btnKlikDisini" class="action-btn">Klik Disini ❤️</button>
+  <!-- TAHAP 1: Pengecekan Earphone -->
+  <div id="earphoneScreen" class="modal show">
+    <div class="modal-content">
+      <h2 id="earphoneTitle">Siapkan earphone-nya maniezz 🎧</h2>
+      <p id="earphoneText" style="margin-bottom: 10px;">Udah dipake earphone-nya?</p>
+      
+      <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
+        <button id="btnYa" class="action-btn">Ya</button>
+        <button id="btnTidak" class="action-btn btn-secondary">Tidak</button>
+      </div>
+    </div>
   </div>
 
   <!-- TAHAP 2: Kartu Ucapan Pop-Up (Multi-Slide) -->
@@ -201,7 +198,7 @@
       <!-- Slide 1 -->
       <div class="slide active" id="slide1">
         <h2>Hai Memettt! 👋</h2>
-        <p>Hari ini hari spesial kamu nih. Cieee yang nambah umur!</p>
+        <p>Hari ini hari spesial-mu nihh. Cieee yang nambah umur!</p>
         <button class="action-btn next-btn" data-next="2">Lanjut ➡️</button>
       </div>
 
@@ -257,15 +254,20 @@
     const mainAudio = document.getElementById('mainAudioPlayer');
     const bgmPlayer = document.getElementById('bgmPlayer');
     const container = document.getElementById('lyricsContainer');
-    // Memastikan volume maksimal (100%)
+    
+    // Pastikan volume 100%
     mainAudio.volume = 1.0;
     bgmPlayer.volume = 1.0;
-    const introScreen = document.getElementById('introScreen');
-    const btnKlikDisini = document.getElementById('btnKlikDisini');
+    
+    // Elemen Layar
+    const earphoneScreen = document.getElementById('earphoneScreen');
+    const earphoneTitle = document.getElementById('earphoneTitle');
+    const earphoneText = document.getElementById('earphoneText');
+    const btnYa = document.getElementById('btnYa');
+    const btnTidak = document.getElementById('btnTidak');
     
     const modal = document.getElementById('greetingModal');
     const btnHadiah = document.getElementById('btnHadiah');
-    
     const musicCard = document.getElementById('musicCard');
 
     // Memuat daftar lirik ke HTML
@@ -306,16 +308,24 @@
 
     // --- LOGIKA TRANSISI ANTAR LAYAR & AUDIO ---
 
-    // Aksi 1: Tombol "Klik Disini" Ditekan
-    btnKlikDisini.addEventListener('click', () => {
-      introScreen.classList.add('hidden');
+    // Aksi 1A: Jika Tombol "Tidak" Ditekan
+    btnTidak.addEventListener('click', () => {
+      earphoneTitle.innerText = "Ngeyel! 🛑";
+      earphoneText.innerHTML = "<strong>PAKEE NGGAAAA, KU TONJOK LU MET KALO GAK DIPAKE 😡</strong>";
+    });
+
+    // Aksi 1B: Jika Tombol "Ya" Ditekan
+    btnYa.addEventListener('click', () => {
+      // Sembunyikan layar earphone
+      earphoneScreen.classList.remove('show');
       
       // Memutar BGM saat kartu ucapan terbuka
       bgmPlayer.play().catch(e => console.log("BGM diblokir browser", e));
 
+      // Munculkan Kartu Ucapan
       setTimeout(() => {
         modal.classList.add('show');
-      }, 300);
+      }, 400);
     });
 
     // Aksi 2: Logika Pindah Slide Kartu Ucapan
@@ -345,7 +355,7 @@
       setTimeout(() => {
         musicCard.classList.add('show');
         
-        // Memutar Lagu Utama "Sepotong Perayaan"
+        // Memutar Lagu Utama
         mainAudio.play().catch(() => {
           console.log("Autoplay diblokir browser, putar manual.");
         });
