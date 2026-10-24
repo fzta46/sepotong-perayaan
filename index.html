@@ -205,7 +205,7 @@
       <h2 id="earphoneTitle">Siapkan earphone-nya maniezz 🎧</h2>
       <p id="earphoneText" style="margin-bottom: 10px;">Udah dipake earphone-nya?</p>
       
-      <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
+      <div id="earphoneButtons" style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
         <button id="btnYa" class="action-btn">Ya</button>
         <button id="btnTidak" class="action-btn btn-secondary">Tidak</button>
       </div>
@@ -289,6 +289,7 @@
     const earphoneText = document.getElementById('earphoneText');
     const btnYa = document.getElementById('btnYa');
     const btnTidak = document.getElementById('btnTidak');
+    const earphoneButtons = document.getElementById('earphoneButtons');
     
     const modal = document.getElementById('greetingModal');
     const btnHadiah = document.getElementById('btnHadiah');
@@ -340,15 +341,8 @@
       }, 300);
     });
 
-    // Aksi 1A: Jika Tombol "Tidak" Ditekan
-    btnTidak.addEventListener('click', () => {
-      earphoneTitle.innerText = "Ngeyel! 🛑";
-      earphoneText.innerHTML = "<strong>PAKEE NGGAAAA, KU TONJOK LU MET KALO GAK DIPAKE 😡</strong>";
-    });
-
-    // Aksi 1B: Jika Tombol "Ya" Ditekan
-    btnYa.addEventListener('click', () => {
-      // Sembunyikan layar earphone
+    // Fungsi untuk melanjutkan ke Kartu Ucapan
+    function lanjutKeKartuUcapan() {
       earphoneScreen.classList.remove('show');
       
       // Memutar BGM saat kartu ucapan terbuka
@@ -358,6 +352,25 @@
       setTimeout(() => {
         modal.classList.add('show');
       }, 400);
+    }
+
+    // Aksi 1A: Jika Tombol "Tidak" Ditekan
+    btnTidak.addEventListener('click', () => {
+      earphoneTitle.innerText = "Ngeyel! 🛑";
+      earphoneText.innerHTML = "<strong>PAKEE NGGAAAA, KU TONJOK LU MET KALO GAK DIPAKE 😡</strong>";
+      
+      // Ubah tombol pilihan menjadi satu tombol "Oke mari kita lanjutkan"
+      earphoneButtons.innerHTML = `<button id="btnLanjutBaru" class="action-btn">Oke mari kita lanjutkan</button>`;
+      
+      // Berikan fungsi klik pada tombol baru tersebut
+      document.getElementById('btnLanjutBaru').addEventListener('click', () => {
+        lanjutKeKartuUcapan();
+      });
+    });
+
+    // Aksi 1B: Jika Tombol "Ya" Ditekan langsung di awal
+    btnYa.addEventListener('click', () => {
+      lanjutKeKartuUcapan();
     });
 
     // Aksi 2: Logika Pindah Slide Kartu Ucapan
