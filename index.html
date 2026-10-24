@@ -21,7 +21,10 @@
       justify-content: center;
       align-items: center;
       padding: 20px;
+      overflow: hidden; /* Mencegah layar bisa digeser saat kartu ucapan muncul */
     }
+    
+    /* Area Pemutar Musik & Lirik (Disembunyikan di awal) */
     .card {
       background: rgba(255, 255, 255, 0.05);
       backdrop-filter: blur(10px);
@@ -32,6 +35,16 @@
       text-align: center;
       max-width: 400px;
       width: 100%;
+      opacity: 0;
+      transform: scale(0.8);
+      transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: absolute;
+      z-index: 1;
+    }
+    /* Kelas tambahan untuk memunculkan pemutar musik nanti */
+    .card.show {
+      opacity: 1;
+      transform: scale(1);
     }
     .icon {
       font-size: 2.5rem;
@@ -80,11 +93,76 @@
       opacity: 1;
       transform: scale(1.05);
     }
+
+    /* Area Kartu Ucapan Awal (Menutupi Layar) */
+    .modal {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: linear-gradient(135deg, #0f172a, #1e293b); /* Latar gelap menutupi yang lain */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+    .modal-content {
+      background: #1e293b;
+      padding: 40px 30px;
+      border-radius: 20px;
+      text-align: center;
+      max-width: 320px;
+      width: 90%;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+      animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes popIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .modal-content h2 {
+      color: #ff4b91;
+      margin-bottom: 15px;
+      font-size: 1.5rem;
+    }
+    .modal-content p {
+      color: #cbd5e1;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 25px;
+    }
+    .open-btn {
+      background: linear-gradient(135deg, #ff4b91, #ff0060);
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 25px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(255, 0, 96, 0.4);
+      transition: transform 0.3s ease;
+    }
+    .open-btn:hover {
+      transform: scale(1.08);
+    }
   </style>
 </head>
 <body>
 
-  <div class="card">
+  <!-- 1. Kartu Ucapan Pop-Up (Tampil Duluan) -->
+  <div id="greetingModal" class="modal">
+    <div class="modal-content">
+      <h2>Untuk Kamu 💖</h2>
+      <p>Selamat ulang tahun Memettt! Semoga panjang umur, sehat selalu, dan semua yang disemogakan segera tersemogakan. ✨</p>
+      
+      <!-- Tombol untuk menutup ucapan dan membuka pemutar musik -->
+      <button id="openBtn" class="open-btn">Buka Hadiah 🎁</button>
+    </div>
+  </div>
+
+  <!-- 2. Kotak Pemutar Musik & Lirik (Sembunyi di Belakang) -->
+  <div class="card" id="musicCard">
     <div class="icon">🎵</div>
     <h1>Kikik Ganteng-Sepotong Perayaan</h1>
     <p class="subtitle">Selamat Ulang Taun Memettt</p>
@@ -95,19 +173,7 @@
     <div class="lyrics-container" id="lyricsContainer"></div>
   </div>
 
-  <button id="loveBtn" class="love-btn">❤️ Klik Disini</button>
-</div>
-
-<div id="greetingModal" class="modal">
-  <div class="modal-content">
-    <span class="close-btn" id="closeBtn">&times;</span>
-    <h2>Teruntuk Memet❤️</h2>
-    <p>Selamat Ulang Tahun, Semoga segala yang diinginkan lekas terwujud. Aamiin.</p>
-  </div>
-</div>
-
   <script>
-    // Sesuaikan angka detik (time) dan teks lirik lagu kamu di sini
     const lyricsData = [
       { time: 0, text: "Selamat Malam,🌙" },
       { time: 4, text: "yang Ter-Sayang💕" },
@@ -129,8 +195,11 @@
 
     const audio = document.getElementById('audioPlayer');
     const container = document.getElementById('lyricsContainer');
+    const modal = document.getElementById('greetingModal');
+    const musicCard = document.getElementById('musicCard');
+    const openBtn = document.getElementById('openBtn');
 
-    // Menampilkan daftar lirik ke layar
+    // Memuat daftar lirik ke HTML
     lyricsData.forEach((item, index) => {
       const p = document.createElement('p');
       p.classList.add('lyric-line');
@@ -139,7 +208,7 @@
       container.appendChild(p);
     });
 
-    // Memantau detik pemutaran lagu
+    // Logika Sorot Lirik Berjalan
     audio.addEventListener('timeupdate', () => {
       const currentTime = audio.currentTime;
       let activeIndex = -1;
@@ -166,22 +235,21 @@
       }
     });
 
-    const loveBtn = document.getElementById('loveBtn');
-    const modal = document.getElementById('greetingModal');
-    const closeBtn = document.getElementById('closeBtn');
-
-    loveBtn.addEventListener('click', () => {
-      modal.style.display = 'flex';
-    });
-
-    closeBtn.addEventListener('click', () => {
-      modal.style.display = 'none';
-    });
-
-    window.addEventListener('click', (e) => {
-      if (e.target === modal) {
-        modal.style.display = 'none';
-      }
+    // Logika Ketika Tombol "Buka Hadiah" Ditekan
+    openBtn.addEventListener('click', () => {
+      // 1. Hilangkan Kartu Ucapan
+      modal.style.opacity = '0';
+      modal.style.visibility = 'hidden';
+      
+      // 2. Munculkan Pemutar Musik dengan jeda sedikit biar estetik
+      setTimeout(() => {
+        musicCard.classList.add('show');
+        
+        // Opsional: Otomatis memutar lagu ketika kartu terbuka
+        audio.play().catch(() => {
+          console.log("Autoplay diblokir browser, putar manual.");
+        });
+      }, 300);
     });
   </script>
 </body>
