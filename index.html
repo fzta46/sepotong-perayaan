@@ -257,7 +257,9 @@
     const mainAudio = document.getElementById('mainAudioPlayer');
     const bgmPlayer = document.getElementById('bgmPlayer');
     const container = document.getElementById('lyricsContainer');
-    
+    // Memastikan volume maksimal (100%)
+    mainAudio.volume = 1.0;
+    bgmPlayer.volume = 1.0;
     const introScreen = document.getElementById('introScreen');
     const btnKlikDisini = document.getElementById('btnKlikDisini');
     
