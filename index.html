@@ -24,7 +24,7 @@
       overflow: hidden;
     }
     
-    /* 1. Layar Awal (Tombol Klik Disini) */
+    /* 1. Layar Awal */
     .intro-screen {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
@@ -40,7 +40,7 @@
       visibility: hidden;
     }
 
-    /* 2. Area Kartu Ucapan Pop-Up (Disembunyikan di awal) */
+    /* 2. Kartu Ucapan Pop-Up */
     .modal {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
@@ -72,6 +72,19 @@
     .modal.show .modal-content {
       transform: scale(1);
     }
+    
+    .slide {
+      display: none;
+      animation: fadeInSlide 0.5s ease forwards;
+    }
+    .slide.active {
+      display: block;
+    }
+    @keyframes fadeInSlide {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
     .modal-content h2 {
       color: #ff4b91;
       margin-bottom: 15px;
@@ -84,7 +97,7 @@
       margin-bottom: 25px;
     }
 
-    /* 3. Area Pemutar Musik & Lirik (Disembunyikan di awal) */
+    /* 3. Kotak Musik */
     .card {
       background: rgba(255, 255, 255, 0.05);
       backdrop-filter: blur(10px);
@@ -126,7 +139,7 @@
       outline: none;
     }
     
-    /* Area Lirik Berjalan */
+    /* Area Lirik */
     .lyrics-container {
       height: 160px;
       overflow-y: auto;
@@ -153,7 +166,7 @@
       transform: scale(1.05);
     }
 
-    /* Gaya Tombol (Dipakai untuk tombol awal dan tombol hadiah) */
+    /* Gaya Tombol */
     .action-btn {
       background: linear-gradient(135deg, #ff4b91, #ff0060);
       color: white;
@@ -173,18 +186,39 @@
 </head>
 <body>
 
+  <!-- Audio Backsound (disembunyikan, berputar berulang) -->
+  <audio id="bgmPlayer" loop src="backsound.mp3"></audio>
+
   <!-- TAHAP 1: Layar Awal -->
   <div id="introScreen" class="intro-screen">
     <button id="btnKlikDisini" class="action-btn">Klik Disini ❤️</button>
   </div>
 
-  <!-- TAHAP 2: Kartu Ucapan Pop-Up -->
+  <!-- TAHAP 2: Kartu Ucapan Pop-Up (Multi-Slide) -->
   <div id="greetingModal" class="modal">
     <div class="modal-content">
-      <h2>Untuk Kamu 💖</h2>
-      <p>Selamat ulang tahun Memettt! Semoga panjang umur, sehat selalu, dan semua yang disemogakan segera tersemogakan. ✨</p>
       
-      <button id="btnHadiah" class="action-btn">Ini Hadiahmu 🎁</button>
+      <!-- Slide 1 -->
+      <div class="slide active" id="slide1">
+        <h2>Hai Memettt! 👋</h2>
+        <p>Hari ini hari spesial kamu nih. Cieee yang nambah umur!</p>
+        <button class="action-btn next-btn" data-next="2">Lanjut ➡️</button>
+      </div>
+
+      <!-- Slide 2 -->
+      <div class="slide" id="slide2">
+        <h2>Doaku Untukmu 🎉</h2>
+        <p>Semoga panjang umur, sehat selalu, makin dimudahkan rezekinya, dan terus jadi orang baik ya.</p>
+        <button class="action-btn next-btn" data-next="3">Lanjut ➡️</button>
+      </div>
+
+      <!-- Slide 3 -->
+      <div class="slide" id="slide3">
+        <h2>Harapanku 💖</h2>
+        <p>Semoga semua hal baik yang sedang kamu semogakan segera tersemogakan tahun ini. Aamiin ✨</p>
+        <button id="btnHadiah" class="action-btn">Ini Hadiahmu 🎁</button>
+      </div>
+
     </div>
   </div>
 
@@ -194,7 +228,7 @@
     <h1>Kikik Ganteng-Sepotong Perayaan</h1>
     <p class="subtitle">Selamat Ulang Taun Memettt</p>
     
-    <audio id="audioPlayer" controls src="Sepotong Perayaan.mp3"></audio>
+    <audio id="mainAudioPlayer" controls src="Sepotong Perayaan.mp3"></audio>
 
     <!-- Wadah Lirik -->
     <div class="lyrics-container" id="lyricsContainer"></div>
@@ -220,7 +254,8 @@
       { time: 59, text: "Kan kembali Pulang✨"},
     ];
 
-    const audio = document.getElementById('audioPlayer');
+    const mainAudio = document.getElementById('mainAudioPlayer');
+    const bgmPlayer = document.getElementById('bgmPlayer');
     const container = document.getElementById('lyricsContainer');
     
     const introScreen = document.getElementById('introScreen');
@@ -241,8 +276,8 @@
     });
 
     // Logika Sorot Lirik Berjalan
-    audio.addEventListener('timeupdate', () => {
-      const currentTime = audio.currentTime;
+    mainAudio.addEventListener('timeupdate', () => {
+      const currentTime = mainAudio.currentTime;
       let activeIndex = -1;
 
       for (let i = 0; i < lyricsData.length; i++) {
@@ -267,30 +302,49 @@
       }
     });
 
-    // LOGIKA TRANSISI ANTAR LAYAR
+    // --- LOGIKA TRANSISI ANTAR LAYAR & AUDIO ---
 
     // Aksi 1: Tombol "Klik Disini" Ditekan
     btnKlikDisini.addEventListener('click', () => {
-      // Sembunyikan layar awal
       introScreen.classList.add('hidden');
       
-      // Munculkan Kartu Ucapan dengan jeda sedikit
+      // Memutar BGM saat kartu ucapan terbuka
+      bgmPlayer.play().catch(e => console.log("BGM diblokir browser", e));
+
       setTimeout(() => {
         modal.classList.add('show');
       }, 300);
     });
 
-    // Aksi 2: Tombol "Ini Hadiahmu" Ditekan
+    // Aksi 2: Logika Pindah Slide Kartu Ucapan
+    const nextBtns = document.querySelectorAll('.next-btn');
+    const slides = document.querySelectorAll('.slide');
+
+    nextBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const nextSlideId = e.target.getAttribute('data-next');
+        
+        slides.forEach(slide => {
+          slide.classList.remove('active');
+        });
+        
+        document.getElementById(`slide${nextSlideId}`).classList.add('active');
+      });
+    });
+
+    // Aksi 3: Tombol "Ini Hadiahmu" Ditekan
     btnHadiah.addEventListener('click', () => {
-      // Sembunyikan Kartu Ucapan
       modal.classList.remove('show');
       
-      // Munculkan Pemutar Musik
+      // Matikan BGM Kartu Ucapan
+      bgmPlayer.pause();
+      bgmPlayer.currentTime = 0;
+      
       setTimeout(() => {
         musicCard.classList.add('show');
         
-        // Memutar lagu otomatis (Browser biasanya mengizinkan ini karena diawali oleh klik user)
-        audio.play().catch(() => {
+        // Memutar Lagu Utama "Sepotong Perayaan"
+        mainAudio.play().catch(() => {
           console.log("Autoplay diblokir browser, putar manual.");
         });
       }, 400);
