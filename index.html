@@ -38,24 +38,21 @@
     .intro-screen.hidden {
       opacity: 0;
       visibility: hidden;
+      pointer-events: none;
     }
 
-    /* Modal Layar Penuh */
+    /* Modal Layar Penuh (Dasar) */
     .modal {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
       background: linear-gradient(135deg, #0f172a, #1e293b);
-      display: flex;
+      display: none; /* Sembunyikan secara default agar tidak numpuk */
       justify-content: center;
       align-items: center;
       z-index: 1000;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.5s ease;
     }
     .modal.show {
-      opacity: 1;
-      visibility: visible;
+      display: flex; /* Hanya tampil jika ada class 'show' */
     }
     
     .modal-content {
@@ -67,23 +64,27 @@
       width: 90%;
       border: 1px solid rgba(255, 255, 255, 0.1);
       box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-      transform: scale(0.8);
-      transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
-    .modal.show .modal-content {
-      transform: scale(1);
+    @keyframes popIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
     }
     
+    /* Logika Tampilan Step / Bagian di dalam Modal */
+    .step-box {
+      display: none;
+    }
+    .step-box.active {
+      display: block;
+    }
+
+    /* Slide Kartu Ucapan */
     .slide {
       display: none;
-      animation: fadeInSlide 0.5s ease forwards;
     }
     .slide.active {
       display: block;
-    }
-    @keyframes fadeInSlide {
-      from { opacity: 0; transform: translateY(15px); }
-      to { opacity: 1; transform: translateY(0); }
     }
     
     .modal-content h2 {
@@ -109,15 +110,12 @@
       text-align: center;
       max-width: 400px;
       width: 100%;
-      opacity: 0;
-      transform: scale(0.8);
-      transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: none; /* Sembunyikan di awal */
       position: absolute;
       z-index: 1;
     }
     .card.show {
-      opacity: 1;
-      transform: scale(1);
+      display: block;
     }
     .icon {
       font-size: 2.5rem;
@@ -200,12 +198,12 @@
     <button id="btnKlikDisini" class="action-btn">Klik Disini ❤️</button>
   </div>
 
-  <!-- TAHAP 1: Pengecekan Earphone (Multi-Branch Modal) -->
+  <!-- TAHAP 1: Kotak Dialog Utama (Pengecekan Earphone & Percabangan) -->
   <div id="earphoneScreen" class="modal">
     <div class="modal-content">
       
-      <!-- Bagian Utama: Pertanyaan Awal -->
-      <div class="eb-slide active" id="ebSlide1">
+      <!-- Box 1: Pertanyaan Awal -->
+      <div class="step-box active" id="stepAwal">
         <h2>Siapkan earphone-nya maniezz 🎧</h2>
         <p style="margin-bottom: 10px;">Udah dipake earphone-nya?</p>
         <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
@@ -214,8 +212,8 @@
         </div>
       </div>
 
-      <!-- Cabang Jika Pilih "Tidak" -->
-      <div class="eb-slide" id="ebSlideTidak">
+      <!-- Box 2: Cabang "Tidak" (Ngeyel!) -->
+      <div class="step-box" id="stepNgeyel">
         <h2>Ngeyel! 🛑</h2>
         <p style="margin-bottom: 20px;"><strong>PAKEE NGGAAAA, KU TONJOK LU MET KALO GAK DIPAKE 😡</strong></p>
         <div style="display: flex; flex-direction: column; gap: 8px;">
@@ -224,8 +222,8 @@
         </div>
       </div>
 
-      <!-- Cabang Jika Pilih "Biarin" -->
-      <div class="eb-slide" id="ebSlideBiarin">
+      <!-- Box 3: Cabang "Biarin" (Allahurabb..) -->
+      <div class="step-box" id="stepAllahurabb">
         <h2>Allahurabb.. 😭</h2>
         <p style="margin-bottom: 20px;"><strong>PAKEE NGGAAKKK!! 🤬</strong></p>
         <div style="display: flex; flex-direction: column; gap: 8px;">
@@ -234,15 +232,13 @@
         </div>
       </div>
 
-    </div>
-  </div>
+      <!-- Box 4: Layar Transisi "Cusss" -->
+      <div class="step-box" id="stepReady">
+        <h2>Oke, Dah ready yaa? 😎</h2>
+        <p style="margin-bottom: 25px;">Nikmati perjalanannya baik-baik yaa.</p>
+        <button id="btnCus" class="action-btn">CUSSSS 🚀</button>
+      </div>
 
-  <!-- TAHAP 1.5: Layar Transisi "Cusss" -->
-  <div id="readyScreen" class="modal">
-    <div class="modal-content">
-      <h2>Oke, Dah ready yaa? 😎</h2>
-      <p style="margin-bottom: 25px;">Nikmati perjalanannya baik-baik yaa.</p>
-      <button id="btnCus" class="action-btn">CUSSSS 🚀</button>
     </div>
   </div>
 
@@ -319,9 +315,10 @@
     const btnKlikDisini = document.getElementById('btnKlikDisini');
 
     const earphoneScreen = document.getElementById('earphoneScreen');
-    const ebSlide1 = document.getElementById('ebSlide1');
-    const ebSlideTidak = document.getElementById('ebSlideTidak');
-    const ebSlideBiarin = document.getElementById('ebSlideBiarin');
+    const stepAwal = document.getElementById('stepAwal');
+    const stepNgeyel = document.getElementById('stepNgeyel');
+    const stepAllahurabb = document.getElementById('stepAllahurabb');
+    const stepReady = document.getElementById('stepReady');
 
     const btnYa = document.getElementById('btnYa');
     const btnTidak = document.getElementById('btnTidak');
@@ -329,8 +326,6 @@
     const btnBiarin = document.getElementById('btnBiarin');
     const btnIyee = document.getElementById('btnIyee');
     const btnYaudah = document.getElementById('btnYaudah');
-    
-    const readyScreen = document.getElementById('readyScreen');
     const btnCus = document.getElementById('btnCus');
 
     const modal = document.getElementById('greetingModal');
@@ -373,66 +368,62 @@
       }
     });
 
-    // --- LOGIKA PERCABANGAN DIALOG EARPHONE ---
+    // --- LOGIKA PERCABANGAN DIALOG EARPHONES (SATU PERSATU) ---
+
+    // Fungsi helper untuk mengganti step aktif di dalam satu modal earphone
+    function pindahStep(targetStep) {
+      [stepAwal, stepNgeyel, stepAllahurabb, stepReady].forEach(step => {
+        step.classList.remove('active');
+      });
+      targetStep.classList.add('active');
+    }
 
     // 1. Klik Tombol "Klik Disini" di Awal
     btnKlikDisini.addEventListener('click', () => {
       introScreen.classList.add('hidden');
-      setTimeout(() => {
-        earphoneScreen.classList.add('show');
-      }, 300);
+      earphoneScreen.classList.add('show');
     });
 
-    // Fungsi helper untuk pindah ke layar "Ready" (CUSSSS)
-    function tampilkanLayarReady() {
-      earphoneScreen.classList.remove('show');
-      setTimeout(() => {
-        readyScreen.classList.add('show');
-      }, 400);
-    }
-
-    // 2. Jika pilih "Ya" di awal -> langsung ke layar Ready
+    // 2. Jika pilih "Ya" di awal -> langsung ke step "Ready"
     btnYa.addEventListener('click', () => {
-      tampilkanLayarReady();
+      pindahStep(stepReady);
     });
 
-    // 3. Jika pilih "Tidak" di awal -> pindah ke slide "Ngeyel!"
+    // 3. Jika pilih "Tidak" di awal -> pindah ke step "Ngeyel!"
     btnTidak.addEventListener('click', () => {
-      ebSlide1.classList.remove('active');
-      ebSlideTidak.classList.add('active');
+      pindahStep(stepNgeyel);
     });
 
-    // 4. Jika di slide "Ngeyel!" pilih "Iya ini kupake" -> langsung ke layar Ready
+    // 4. Jika di step "Ngeyel!" pilih "Iya ini kupake" -> ke step "Ready"
     btnIyaKupake.addEventListener('click', () => {
-      tampilkanLayarReady();
+      pindahStep(stepReady);
     });
 
-    // 5. Jika di slide "Ngeyel!" pilih "Biarin" -> pindah ke slide "Allahurabb.."
+    // 5. Jika di step "Ngeyel!" pilih "Biarin" -> pindah ke step "Allahurabb.."
     btnBiarin.addEventListener('click', () => {
-      ebSlideTidak.classList.remove('active');
-      ebSlideBiarin.classList.add('active');
+      pindahStep(stepAllahurabb);
     });
 
-    // 6. Jika di slide "Allahurabb.." pilih "Iyee iyeee" atau "Yaudah dehh ini kupake" -> ke layar Ready
+    // 6. Jika di step "Allahurabb.." pilih tombol "Iyee" / "Yaudah" -> ke step "Ready"
     btnIyee.addEventListener('click', () => {
-      tampilkanLayarReady();
+      pindahStep(stepReady);
     });
     btnYaudah.addEventListener('click', () => {
-      tampilkanLayarReady();
+      pindahStep(stepReady);
     });
 
-    // --- TRANSISI LANJUTAN ---
+    // --- TRANSISI LANJUTAN SETELAH CUSSS ---
 
-    // Saat tombol "CUSSSS" ditekan -> putar BGM dan masuk ke Kartu Ucapan Multi-Slide
+    // Saat tombol "CUSSSS" ditekan -> tutup modal earphone, putar BGM, dan buka Kartu Ucapan
     btnCus.addEventListener('click', () => {
-      readyScreen.classList.remove('show');
+      earphoneScreen.classList.remove('show');
       
       // Memutar BGM backsound
       bgmPlayer.play().catch(e => console.log("BGM diblokir browser", e));
 
       setTimeout(() => {
         modal.classList.add('show');
-      }, 400);
+      }, 300);
     });
 
     // Logika Pindah Slide Kartu Ucapan
