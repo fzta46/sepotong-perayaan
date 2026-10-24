@@ -212,6 +212,15 @@
     </div>
   </div>
 
+  <!-- TAHAP 1.5: Layar Transisi "Cusss" -->
+  <div id="readyScreen" class="modal">
+    <div class="modal-content">
+      <h2>Oke, Dah ready yaa? 😎</h2>
+      <p style="margin-bottom: 25px;">Nikmati perjalanannya baik-baik yaa.</p>
+      <button id="btnCus" class="action-btn">CUSSSS 🚀</button>
+    </div>
+  </div>
+
   <!-- TAHAP 2: Kartu Ucapan Pop-Up (Multi-Slide) -->
   <div id="greetingModal" class="modal">
     <div class="modal-content">
@@ -291,6 +300,9 @@
     const btnTidak = document.getElementById('btnTidak');
     const earphoneButtons = document.getElementById('earphoneButtons');
     
+    const readyScreen = document.getElementById('readyScreen');
+    const btnCus = document.getElementById('btnCus');
+
     const modal = document.getElementById('greetingModal');
     const btnHadiah = document.getElementById('btnHadiah');
     const musicCard = document.getElementById('musicCard');
@@ -341,16 +353,11 @@
       }, 300);
     });
 
-    // Fungsi untuk melanjutkan ke Kartu Ucapan
-    function lanjutKeKartuUcapan() {
+    // Fungsi untuk memunculkan layar transisi "Cus"
+    function tampilkanLayarReady() {
       earphoneScreen.classList.remove('show');
-      
-      // Memutar BGM saat kartu ucapan terbuka
-      bgmPlayer.play().catch(e => console.log("BGM diblokir browser", e));
-
-      // Munculkan Kartu Ucapan
       setTimeout(() => {
-        modal.classList.add('show');
+        readyScreen.classList.add('show');
       }, 400);
     }
 
@@ -359,18 +366,29 @@
       earphoneTitle.innerText = "Ngeyel! 🛑";
       earphoneText.innerHTML = "<strong>PAKEE NGGAAAA, KU TONJOK LU MET KALO GAK DIPAKE 😡</strong>";
       
-      // Ubah tombol pilihan menjadi satu tombol "Oke mari kita lanjutkan"
-      earphoneButtons.innerHTML = `<button id="btnLanjutBaru" class="action-btn">Oke mari kita lanjutkan</button>`;
+      // Ubah tombol pilihan menjadi satu tombol lanjut ke layar "Ready"
+      earphoneButtons.innerHTML = `<button id="btnLanjutBaru" class="action-btn">Oke, paham!</button>`;
       
-      // Berikan fungsi klik pada tombol baru tersebut
       document.getElementById('btnLanjutBaru').addEventListener('click', () => {
-        lanjutKeKartuUcapan();
+        tampilkanLayarReady();
       });
     });
 
-    // Aksi 1B: Jika Tombol "Ya" Ditekan langsung di awal
+    // Aksi 1B: Jika Tombol "Ya" Ditekan langsung
     btnYa.addEventListener('click', () => {
-      lanjutKeKartuUcapan();
+      tampilkanLayarReady();
+    });
+
+    // Aksi 1.5: Saat tombol "CUSSSS" ditekan, barulah BGM berputar dan masuk ke Kartu Ucapan
+    btnCus.addEventListener('click', () => {
+      readyScreen.classList.remove('show');
+      
+      // Memutar BGM backsound
+      bgmPlayer.play().catch(e => console.log("BGM diblokir browser", e));
+
+      setTimeout(() => {
+        modal.classList.add('show');
+      }, 400);
     });
 
     // Aksi 2: Logika Pindah Slide Kartu Ucapan
