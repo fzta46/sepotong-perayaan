@@ -24,6 +24,22 @@
       overflow: hidden;
     }
 
+    /* 1. Layar Awal (Tombol Klik Disini) */
+    .intro-screen {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 3000;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+    .intro-screen.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
     /* Modal Layar Penuh */
     .modal {
       position: fixed;
@@ -178,8 +194,13 @@
   <!-- Audio Backsound -->
   <audio id="bgmPlayer" loop src="backsound.mp3"></audio>
 
+  <!-- TAHAP 0: Layar Awal (Tombol Klik Disini) -->
+  <div id="introScreen" class="intro-screen">
+    <button id="btnKlikDisini" class="action-btn">Klik Disini ❤️</button>
+  </div>
+
   <!-- TAHAP 1: Pengecekan Earphone -->
-  <div id="earphoneScreen" class="modal show">
+  <div id="earphoneScreen" class="modal">
     <div class="modal-content">
       <h2 id="earphoneTitle">Siapkan earphone-nya maniezz 🎧</h2>
       <p id="earphoneText" style="margin-bottom: 10px;">Udah dipake earphone-nya?</p>
@@ -260,6 +281,9 @@
     bgmPlayer.volume = 1.0;
     
     // Elemen Layar
+    const introScreen = document.getElementById('introScreen');
+    const btnKlikDisini = document.getElementById('btnKlikDisini');
+
     const earphoneScreen = document.getElementById('earphoneScreen');
     const earphoneTitle = document.getElementById('earphoneTitle');
     const earphoneText = document.getElementById('earphoneText');
@@ -307,6 +331,14 @@
     });
 
     // --- LOGIKA TRANSISI ANTAR LAYAR & AUDIO ---
+
+    // Aksi 0: Tombol "Klik Disini" Ditekan di Awal
+    btnKlikDisini.addEventListener('click', () => {
+      introScreen.classList.add('hidden');
+      setTimeout(() => {
+        earphoneScreen.classList.add('show');
+      }, 300);
+    });
 
     // Aksi 1A: Jika Tombol "Tidak" Ditekan
     btnTidak.addEventListener('click', () => {
