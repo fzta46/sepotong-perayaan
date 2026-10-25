@@ -24,11 +24,134 @@
       overflow: hidden;
     }
 
-    /* 1. Layar Awal (Tombol Klik Disini) */
+    /* ===== PIXEL LAYERS ===== */
+    canvas.pixel {
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+    }
+    #starCanvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      image-rendering: pixelated;
+    }
+    #moonSlot {
+      position: fixed;
+      top: 20px; right: 20px;
+      z-index: 0;
+      pointer-events: none;
+      animation: pxFloat 4s steps(1, end) infinite;
+    }
+    #heartLayer {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      overflow: hidden;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .float-heart {
+      position: absolute;
+      bottom: -40px;
+      opacity: 0.55;
+      animation: floatUp 9s steps(45, end) forwards;
+    }
+    #confettiCanvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 5000;
+      pointer-events: none;
+    }
+    .pixel-slot {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 14px;
+    }
+    .pixel-bounce {
+      animation: pxBounce 0.8s steps(1, end) infinite;
+    }
+    #eqCanvas {
+      display: block;
+      margin: 0 auto 14px;
+      image-rendering: pixelated;
+    }
+    @keyframes pxFloat {
+      0%   { transform: translateY(0); }
+      25%  { transform: translateY(-4px); }
+      50%  { transform: translateY(-8px); }
+      75%  { transform: translateY(-4px); }
+      100% { transform: translateY(0); }
+    }
+    @keyframes pxBounce {
+      0%   { transform: translateY(0); }
+      50%  { transform: translateY(-8px); }
+      100% { transform: translateY(0); }
+    }
+    @keyframes floatUp {
+      from { transform: translateY(0); }
+      to   { transform: translateY(-115vh); }
+    }
+
+    /* ===== ANIMASI FOTO POLAROID ===== */
+    .polaroid-frame {
+      position: fixed;
+      top: -150%;
+      left: 50%;
+      transform: translateX(-50%) rotate(0deg);
+      background: white;
+      padding: 15px 15px 40px 15px;
+      border-radius: 10px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+      z-index: 0; 
+      width: 280px;
+      transition: top 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      animation: polaroidFloat 5s ease-in-out infinite;
+    }
+    .polaroid-frame.show {
+      top: 5%; 
+    }
+    .polaroid-frame img {
+      width: 100%;
+      border-radius: 5px;
+      image-rendering: crisp-edges;
+    }
+    .polaroid-text {
+      color: #0f172a;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      text-align: center;
+      margin-top: 15px;
+      font-size: 1.1rem;
+    }
+    @keyframes polaroidFloat {
+      0%, 100% { transform: translateX(-50%) translateY(0) rotate(-2deg); }
+      50% { transform: translateX(-50%) translateY(-15px) rotate(2deg); }
+    }
+
+    /* ===== ANIMASI KARAKTER BERLARI ===== */
+    #runnerLayer {
+      position: fixed;
+      bottom: 30px;
+      left: -200px; 
+      display: flex;
+      gap: 25px; 
+      z-index: 4000;
+      pointer-events: none;
+      animation: runAcross 10s linear infinite;
+    }
+    @keyframes runAcross {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(calc(100vw + 350px)); }
+    }
+
+    /* 1. Layar Awal */
     .intro-screen {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: linear-gradient(135deg, #0f172a, #1e293b);
+      background: transparent; 
       display: flex;
       justify-content: center;
       align-items: center;
@@ -41,18 +164,18 @@
       pointer-events: none;
     }
 
-    /* Modal Layar Penuh (Dasar) */
+    /* Modal Layar Penuh */
     .modal {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: linear-gradient(135deg, #0f172a, #1e293b);
-      display: none; /* Sembunyikan secara default agar tidak numpuk */
+      background: transparent; 
+      display: none; 
       justify-content: center;
       align-items: center;
       z-index: 1000;
     }
     .modal.show {
-      display: flex; /* Hanya tampil jika ada class 'show' */
+      display: flex; 
     }
     
     .modal-content {
@@ -71,21 +194,11 @@
       to { transform: scale(1); opacity: 1; }
     }
     
-    /* Logika Tampilan Step / Bagian di dalam Modal */
-    .step-box {
-      display: none;
-    }
-    .step-box.active {
-      display: block;
-    }
+    .step-box { display: none; }
+    .step-box.active { display: block; }
 
-    /* Slide Kartu Ucapan */
-    .slide {
-      display: none;
-    }
-    .slide.active {
-      display: block;
-    }
+    .slide { display: none; }
+    .slide.active { display: block; }
     
     .modal-content h2 {
       color: #ff4b91;
@@ -110,7 +223,7 @@
       text-align: center;
       max-width: 400px;
       width: 100%;
-      display: none; /* Sembunyikan di awal */
+      display: none; 
       position: absolute;
       z-index: 1;
     }
@@ -147,9 +260,7 @@
       mask-image: linear-gradient(to bottom, transparent, black 25%, black 75%, transparent);
       -webkit-mask-image: linear-gradient(to bottom, transparent, black 25%, black 75%, transparent);
     }
-    .lyrics-container::-webkit-scrollbar {
-      display: none;
-    }
+    .lyrics-container::-webkit-scrollbar { display: none; }
     .lyric-line {
       font-size: 0.95rem;
       color: #64748b;
@@ -190,19 +301,27 @@
 </head>
 <body>
 
+  <!-- ===== LATAR PIXEL ===== -->
+  <canvas id="starCanvas"></canvas>
+  <div id="moonSlot"></div>
+  <div id="heartLayer"></div>
+  <canvas id="confettiCanvas"></canvas>
+  
+  <!-- ===== ANIMASI KARAKTER BERLARI ===== -->
+  <div id="runnerLayer"></div>
+
   <!-- Audio Backsound -->
   <audio id="bgmPlayer" loop src="backsound.mp3"></audio>
 
-  <!-- TAHAP 0: Layar Awal (Tombol Klik Disini) -->
+  <!-- TAHAP 0: Layar Awal -->
   <div id="introScreen" class="intro-screen">
     <button id="btnKlikDisini" class="action-btn">Klik Disini ❤️</button>
   </div>
 
-  <!-- TAHAP 1: Kotak Dialog Utama (Pengecekan Earphone & Percabangan) -->
+  <!-- TAHAP 1: Kotak Dialog Earphone -->
   <div id="earphoneScreen" class="modal">
     <div class="modal-content">
       
-      <!-- Box 1: Pertanyaan Awal -->
       <div class="step-box active" id="stepAwal">
         <h2>Siapkan earphone-nya maniezz 🎧</h2>
         <p style="margin-bottom: 10px;">Udah dipake earphone-nya?</p>
@@ -212,7 +331,6 @@
         </div>
       </div>
 
-      <!-- Box 2: Cabang "Tidak" (Ngeyel!) -->
       <div class="step-box" id="stepNgeyel">
         <h2>Ngeyel! 🛑</h2>
         <p style="margin-bottom: 20px;"><strong>PAKEE NGGAAAA, KU TONJOK LU ISHHH KALO GAK DIPAKE 😡</strong></p>
@@ -222,7 +340,6 @@
         </div>
       </div>
 
-      <!-- Box 3: Cabang "Biarin" (Allahurabb..) -->
       <div class="step-box" id="stepAllahurabb">
         <h2>Allahurabb.. 😭</h2>
         <p style="margin-bottom: 20px;"><strong>PAKEE NGGAAKKK!! 🤬</strong></p>
@@ -232,7 +349,6 @@
         </div>
       </div>
 
-      <!-- Box 4: Layar Transisi "Cusss" -->
       <div class="step-box" id="stepReady">
         <h2>Oke, Dah ready yakk? 😎</h2>
         <p style="margin-bottom: 25px;">Iqro' Ishhh, jangan cepet-cepet! </p>
@@ -242,33 +358,31 @@
     </div>
   </div>
 
-  <!-- TAHAP 2: Kartu Ucapan Pop-Up (Multi-Slide) -->
+  <!-- TAHAP 2: Kartu Ucapan Pop-Up -->
   <div id="greetingModal" class="modal">
     <div class="modal-content">
       
-      <!-- Slide 1 -->
       <div class="slide active" id="slide1">
+        <div id="cakeSlot" class="pixel-slot"></div>
         <h2>Hai Ishhh! 👋</h2>
         <p>Hari ini hari spesial-mu nihh. Cieee yang udah tuwirr yahahahah</p>
         <button class="action-btn next-btn" data-next="2">Lanjut ➡️</button>
       </div>
 
-      <!-- Slide 2 -->
       <div class="slide" id="slide2">
         <h2>Doa Untukmu 🎉</h2>
         <p>Semoga panjang umur, sehat selalu, makin dimudahkan rezekinya, dan terus jadi orang baik meskipun ngomel-ngomel mulu.</p>
         <button class="action-btn next-btn" data-next="3">Lanjut ➡️</button>
       </div>
 
-      <!-- Slide 3 -->
       <div class="slide" id="slide3">
         <h2>Harapan 💖</h2>
         <p>Semoga semua hal baik yang sedang kamu semogakan segera tersemogakan tahun ini yakk. Aamiin ✨</p>
         <button class="action-btn next-btn" data-next="4">Lanjut ➡️</button>
       </div>
 
-      <!-- Slide 4 -->
       <div class="slide" id="slide4">
+        <div id="giftSlot" class="pixel-slot"></div>
         <h2>Tambahan hehe</h2>
         <p>Lagu ini kuciptain khusus untuk kowe, The One and Only Aisyah Nurul Fadilah✨</p>
         <button id="btnHadiah" class="action-btn">Ini Hadiahmu 🎁</button>
@@ -277,15 +391,21 @@
     </div>
   </div>
 
+  <!-- ===== ANIMASI POLAROID ===== -->
+  <div id="polaroid" class="polaroid-frame">
+    <img src="1000835110.jpg" alt="Memory">
+    <div class="polaroid-text">For Aisyah 💙</div>
+  </div>
+
   <!-- TAHAP 3: Kotak Pemutar Musik & Lirik -->
   <div class="card" id="musicCard">
     <div class="icon">🎵</div>
     <h1>Kikik Ganteng-Sepotong Perayaan</h1>
     <p class="subtitle">Selamat Ulang Taun Memettt</p>
-    
+
+    <canvas id="eqCanvas" width="180" height="40"></canvas>
     <audio id="mainAudioPlayer" controls src="Sepotong Perayaan.mp3"></audio>
 
-    <!-- Wadah Lirik -->
     <div class="lyrics-container" id="lyricsContainer"></div>
   </div>
 
@@ -313,11 +433,9 @@
     const bgmPlayer = document.getElementById('bgmPlayer');
     const container = document.getElementById('lyricsContainer');
     
-    // Pastikan volume 100%
     mainAudio.volume = 1.0;
     bgmPlayer.volume = 1.0;
     
-    // Elemen Layar
     const introScreen = document.getElementById('introScreen');
     const btnKlikDisini = document.getElementById('btnKlikDisini');
 
@@ -339,7 +457,6 @@
     const btnHadiah = document.getElementById('btnHadiah');
     const musicCard = document.getElementById('musicCard');
 
-    // Memuat daftar lirik ke HTML
     lyricsData.forEach((item, index) => {
       const p = document.createElement('p');
       p.classList.add('lyric-line');
@@ -348,7 +465,6 @@
       container.appendChild(p);
     });
 
-    // Logika Sorot Lirik Berjalan
     mainAudio.addEventListener('timeupdate', () => {
       const currentTime = mainAudio.currentTime;
       let activeIndex = -1;
@@ -356,9 +472,7 @@
       for (let i = 0; i < lyricsData.length; i++) {
         if (currentTime >= lyricsData[i].time) {
           activeIndex = i;
-        } else {
-          break;
-        }
+        } else { break; }
       }
 
       if (activeIndex !== -1) {
@@ -375,9 +489,6 @@
       }
     });
 
-    // --- LOGIKA PERCABANGAN DIALOG EARPHONES (SATU PERSATU) ---
-
-    // Fungsi helper untuk mengganti step aktif di dalam satu modal earphone
     function pindahStep(targetStep) {
       [stepAwal, stepNgeyel, stepAllahurabb, stepReady].forEach(step => {
         step.classList.remove('active');
@@ -385,81 +496,334 @@
       targetStep.classList.add('active');
     }
 
-    // 1. Klik Tombol "Klik Disini" di Awal
     btnKlikDisini.addEventListener('click', () => {
       introScreen.classList.add('hidden');
       earphoneScreen.classList.add('show');
     });
 
-    // 2. Jika pilih "Ya" di awal -> langsung ke step "Ready"
-    btnYa.addEventListener('click', () => {
-      pindahStep(stepReady);
-    });
+    btnYa.addEventListener('click', () => { pindahStep(stepReady); });
+    btnTidak.addEventListener('click', () => { pindahStep(stepNgeyel); });
+    btnIyaKupake.addEventListener('click', () => { pindahStep(stepReady); });
+    btnBiarin.addEventListener('click', () => { pindahStep(stepAllahurabb); });
+    btnIyee.addEventListener('click', () => { pindahStep(stepReady); });
+    btnYaudah.addEventListener('click', () => { pindahStep(stepReady); });
 
-    // 3. Jika pilih "Tidak" di awal -> pindah ke step "Ngeyel!"
-    btnTidak.addEventListener('click', () => {
-      pindahStep(stepNgeyel);
-    });
-
-    // 4. Jika di step "Ngeyel!" pilih "Iya ini kupake" -> ke step "Ready"
-    btnIyaKupake.addEventListener('click', () => {
-      pindahStep(stepReady);
-    });
-
-    // 5. Jika di step "Ngeyel!" pilih "Biarin" -> pindah ke step "Allahurabb.."
-    btnBiarin.addEventListener('click', () => {
-      pindahStep(stepAllahurabb);
-    });
-
-    // 6. Jika di step "Allahurabb.." pilih tombol "Iyee" / "Yaudah" -> ke step "Ready"
-    btnIyee.addEventListener('click', () => {
-      pindahStep(stepReady);
-    });
-    btnYaudah.addEventListener('click', () => {
-      pindahStep(stepReady);
-    });
-
-    // --- TRANSISI LANJUTAN SETELAH CUSSS ---
-
-    // Saat tombol "CUSSSS" ditekan -> tutup modal earphone, putar BGM, dan buka Kartu Ucapan
     btnCus.addEventListener('click', () => {
       earphoneScreen.classList.remove('show');
-      
-      // Memutar BGM backsound
       bgmPlayer.play().catch(e => console.log("BGM diblokir browser", e));
-
-      setTimeout(() => {
-        modal.classList.add('show');
-      }, 300);
+      setTimeout(() => { modal.classList.add('show'); }, 300);
     });
 
-    // Logika Pindah Slide Kartu Ucapan
     const nextBtns = document.querySelectorAll('.next-btn');
     const slides = document.querySelectorAll('.slide');
 
     nextBtns.forEach(btn => {
       btn.addEventListener('click', (e) => {
         const nextSlideId = e.target.getAttribute('data-next');
-        
-        slides.forEach(slide => {
-          slide.classList.remove('active');
-        });
-        
+        slides.forEach(slide => { slide.classList.remove('active'); });
         document.getElementById(`slide${nextSlideId}`).classList.add('active');
       });
     });
 
-    // Tombol "Ini Hadiahmu" Ditekan -> Matikan BGM, Nyalakan Musik Utama & Lirik
+    // Menampilkan Hadiah & Memunculkan Foto Polaroid
     btnHadiah.addEventListener('click', () => {
       modal.classList.remove('show');
-      
       bgmPlayer.pause();
       bgmPlayer.currentTime = 0;
       
       setTimeout(() => {
         musicCard.classList.add('show');
+        document.getElementById('polaroid').classList.add('show'); // Memanggil polaroid
       }, 400);
     });
+  </script>
+
+  <!-- PIXEL ANIMATION -->
+  <script>
+    (function () {
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      function drawSprite(canvas, rows, palette, scale) {
+        const w = rows[0].length, h = rows.length;
+        canvas.width = w * scale;
+        canvas.height = h * scale;
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        rows.forEach((row, y) => {
+          for (let x = 0; x < row.length; x++) {
+            const color = palette[row[x]];
+            if (color) {
+              ctx.fillStyle = color;
+              ctx.fillRect(x * scale, y * scale, scale, scale);
+            }
+          }
+        });
+      }
+      function makeSprite(rows, palette, scale, className) {
+        const c = document.createElement('canvas');
+        c.className = 'pixel ' + (className || '');
+        drawSprite(c, rows, palette, scale);
+        return c;
+      }
+
+      /* ---------- 1. Bintang ---------- */
+      const starCanvas = document.getElementById('starCanvas');
+      const sctx = starCanvas.getContext('2d');
+      const PX = 4;
+      const STAR_COLORS = ['#f8fafc', '#bae6fd', '#fbcfe8'];
+      let stars = [];
+      let shooting = null;
+
+      function initStars() {
+        starCanvas.width = window.innerWidth;
+        starCanvas.height = window.innerHeight;
+        const count = Math.floor((window.innerWidth * window.innerHeight) / 9000);
+        stars = Array.from({ length: count }, () => ({
+          x: Math.floor(Math.random() * window.innerWidth / PX) * PX,
+          y: Math.floor(Math.random() * window.innerHeight / PX) * PX,
+          big: Math.random() < 0.15,
+          phase: Math.random() * Math.PI * 2,
+          speed: 0.5 + Math.random() * 1.5,
+          color: STAR_COLORS[Math.floor(Math.random() * STAR_COLORS.length)]
+        }));
+      }
+
+      function drawStars(t) {
+        sctx.clearRect(0, 0, starCanvas.width, starCanvas.height);
+        stars.forEach(s => {
+          let a = 0.35 + 0.65 * ((Math.sin(t * s.speed + s.phase) + 1) / 2);
+          a = Math.round(a * 4) / 4; 
+          sctx.globalAlpha = a;
+          sctx.fillStyle = s.color;
+          sctx.fillRect(s.x, s.y, PX, PX);
+          if (s.big) {
+            sctx.fillRect(s.x - PX, s.y, PX, PX);
+            sctx.fillRect(s.x + PX, s.y, PX, PX);
+            sctx.fillRect(s.x, s.y - PX, PX, PX);
+            sctx.fillRect(s.x, s.y + PX, PX, PX);
+          }
+        });
+
+        if (!reduceMotion) {
+          if (!shooting && Math.random() < 0.012) {
+            shooting = {
+              x: window.innerWidth * (0.4 + Math.random() * 0.6),
+              y: Math.random() * window.innerHeight * 0.35
+            };
+          }
+          if (shooting) {
+            for (let i = 0; i < 8; i++) {
+              sctx.globalAlpha = 1 - i / 8;
+              sctx.fillStyle = i === 0 ? '#ffffff' : '#bae6fd';
+              sctx.fillRect(
+                Math.round((shooting.x + i * 8) / PX) * PX,
+                Math.round((shooting.y - i * 4) / PX) * PX,
+                PX, PX
+              );
+            }
+            shooting.x -= 16;
+            shooting.y += 8;
+            if (shooting.x < -60 || shooting.y > window.innerHeight + 60) shooting = null;
+          }
+        }
+        sctx.globalAlpha = 1;
+      }
+
+      let lastStarFrame = 0;
+      function starLoop(ts) {
+        if (ts - lastStarFrame >= 80) { 
+          lastStarFrame = ts;
+          drawStars(ts / 1000);
+        }
+        requestAnimationFrame(starLoop);
+      }
+      initStars();
+      window.addEventListener('resize', initStars);
+      requestAnimationFrame(starLoop);
+
+      /* ---------- 2. Bulan Sabit ---------- */
+      (function buildMoon() {
+        const N = 20;
+        const rows = [];
+        for (let y = 0; y < N; y++) {
+          let row = '';
+          for (let x = 0; x < N; x++) {
+            const d1 = Math.hypot(x - 9.5, y - 9.5);
+            const d2 = Math.hypot(x - 13.5, y - 6.5);
+            if (d1 <= 9 && d2 > 8) row += d1 > 7.5 ? 'S' : 'M';
+            else row += '.';
+          }
+          rows.push(row);
+        }
+        const scale = window.innerWidth < 480 ? 3 : 4;
+        const moon = makeSprite(rows, { M: '#fef9c3', S: '#fde68a' }, scale);
+        document.getElementById('moonSlot').appendChild(moon);
+      })();
+
+      /* ---------- 3. Hati ---------- */
+      const heartRows = ['.XX.XX.', 'XHXXXXX', 'XXXXXXX', '.XXXXX.', '..XXX..', '...X...'];
+      const heartPal = { X: '#ff4b91', H: '#ffb3d1' };
+      const heartLayer = document.getElementById('heartLayer');
+
+      function spawnHeart() {
+        if (document.hidden) return;
+        const scale = [3, 4, 5][Math.floor(Math.random() * 3)];
+        const c = makeSprite(heartRows, heartPal, scale, 'float-heart');
+        c.style.left = (Math.random() * 95) + 'vw';
+        c.style.animationDuration = (7 + Math.random() * 5) + 's';
+        c.addEventListener('animationend', () => c.remove());
+        heartLayer.appendChild(c);
+      }
+      if (!reduceMotion) setInterval(spawnHeart, 1400);
+
+      /* ---------- 4. Kue Ulang Tahun ---------- */
+      const flameA = ['.......F.......', '......OFO......'];
+      const flameB = ['......F........', '.....OFO.......'];
+      const cakeBody = [
+        '.......W.......', '.......R.......', '..LLLLLLLLLLL..',
+        '.PPPPPPPPPPPPP.', '.PLPLPLPLPLPLP.', '.CCCCCCCCCCCCC.',
+        '.CCCCCCCCCCCCC.', '.CCbCCbCCbCCbC.', '.CCCCCCCCCCCCC.',
+        '.PPPPPPPPPPPPP.', 'BBBBBBBBBBBBBBB', '.BBBBBBBBBBBBB.'
+      ];
+      const cakePal = {
+        F: '#fde047', O: '#fb923c', W: '#f8fafc', R: '#ff4b91',
+        L: '#ffb3d1', P: '#ff4b91', C: '#fcd34d', b: '#38bdf8', B: '#92400e'
+      };
+      const cakeCanvas = document.createElement('canvas');
+      cakeCanvas.className = 'pixel';
+      document.getElementById('cakeSlot').appendChild(cakeCanvas);
+      let flameToggle = false;
+      function drawCake() {
+        drawSprite(cakeCanvas, (flameToggle ? flameB : flameA).concat(cakeBody), cakePal, 8);
+      }
+      drawCake();
+      if (!reduceMotion) {
+        setInterval(() => { flameToggle = !flameToggle; drawCake(); }, 300);
+      }
+
+      /* ---------- 5. Kotak Hadiah ---------- */
+      const giftRows = [
+        '..RRR..RRR..', '..R.RRRR.R..', '....RRRR....',
+        'LLLLLRRLLLLL', 'LLLLLRRLLLLL', 'DDDDDRRDDDDD',
+        '.BBBBRRBBBB.', '.BBBBRRBBBB.', '.BBBBRRBBBB.',
+        '.BBBBRRBBBB.', '.BBBBRRBBBB.', '.DDDDDDDDDD.'
+      ];
+      const giftPal = { R: '#fde047', B: '#ff4b91', D: '#e11d6a', L: '#ff7eb3' };
+      document.getElementById('giftSlot').appendChild(
+        makeSprite(giftRows, giftPal, 7, reduceMotion ? '' : 'pixel-bounce')
+      );
+
+      /* ---------- 6. Equalizer Musik ---------- */
+      const eqCanvas = document.getElementById('eqCanvas');
+      const eq = eqCanvas.getContext('2d');
+      const BARS = 10, BW = 10, BGp = 6, BH = 6, BGAP = 2, MAXB = 5;
+      const levels = Array(BARS).fill(1);
+
+      function drawEq() {
+        eq.clearRect(0, 0, eqCanvas.width, eqCanvas.height);
+        const total = BARS * BW + (BARS - 1) * BGp;
+        const ox = Math.floor((eqCanvas.width - total) / 2);
+        for (let b = 0; b < BARS; b++) {
+          for (let k = 0; k < levels[b]; k++) {
+            eq.fillStyle = k >= 4 ? '#38bdf8' : (k >= 2 ? '#ff7eb3' : '#ff4b91');
+            const y = eqCanvas.height - (k + 1) * (BH + BGAP) + BGAP;
+            eq.fillRect(ox + b * (BW + BGp), y, BW, BH);
+          }
+        }
+      }
+      setInterval(() => {
+        const playing = !mainAudio.paused && !mainAudio.ended;
+        for (let i = 0; i < BARS; i++) {
+          levels[i] = playing ? 1 + Math.floor(Math.random() * MAXB) : 1;
+        }
+        drawEq();
+      }, 140);
+      drawEq();
+
+      /* ---------- 7. Confetti ---------- */
+      const confCanvas = document.getElementById('confettiCanvas');
+      const cctx = confCanvas.getContext('2d');
+      const CONF_COLORS = ['#ff4b91', '#fde047', '#38bdf8', '#a78bfa', '#4ade80', '#fb923c'];
+      let confettiRunning = false;
+      let particles = [];
+
+      function burstConfetti(ox, oy, amount) {
+        for (let i = 0; i < amount; i++) {
+          particles.push({
+            x: ox, y: oy,
+            vx: (Math.random() - 0.5) * 18,
+            vy: -6 - Math.random() * 12,
+            s: [4, 8, 8, 12][Math.floor(Math.random() * 4)],
+            c: CONF_COLORS[Math.floor(Math.random() * CONF_COLORS.length)]
+          });
+        }
+        if (!confettiRunning) {
+          confettiRunning = true;
+          confCanvas.width = window.innerWidth;
+          confCanvas.height = window.innerHeight;
+          requestAnimationFrame(confettiLoop);
+        }
+      }
+
+      let lastConf = 0;
+      function confettiLoop(ts) {
+        if (ts - lastConf >= 50) {
+          lastConf = ts;
+          cctx.clearRect(0, 0, confCanvas.width, confCanvas.height);
+          particles.forEach(p => {
+            p.vy += 0.8;
+            p.x += p.vx;
+            p.y += p.vy;
+            cctx.fillStyle = p.c;
+            cctx.fillRect(Math.round(p.x / 4) * 4, Math.round(p.y / 4) * 4, p.s, p.s);
+          });
+          particles = particles.filter(p => p.y < confCanvas.height + 20);
+        }
+        if (particles.length) {
+          requestAnimationFrame(confettiLoop);
+        } else {
+          cctx.clearRect(0, 0, confCanvas.width, confCanvas.height);
+          confettiRunning = false;
+        }
+      }
+
+      document.getElementById('btnHadiah').addEventListener('click', (e) => {
+        if (reduceMotion) return;
+        const r = e.currentTarget.getBoundingClientRect();
+        burstConfetti(r.left + r.width / 2, r.top + r.height / 2, 90);
+        setTimeout(() => burstConfetti(window.innerWidth / 2, window.innerHeight * 0.6, 70), 500);
+      });
+
+      /* ---------- 8. Animasi Karakter Berlari (Berdasarkan Gambar) ---------- */
+      const runPal = {
+        H: '#111827', S: '#fcd34d', W: '#f8fafc', P: '#1e3a8a',
+        K: '#000000', B: '#3b82f6', R: '#ef4444' 
+      };
+      
+      const boyF1 = ['....HHHH....','...HSSSSH...','...HSSSSH...','....SSSS....','...WWWWWW...','..W.WWWW.W..','..S.WWWW.S..','....PPPP....','...PP..PP...','...KK..KK...'];
+      const boyF2 = ['....HHHH....','...HSSSSH...','...HSSSSH...','....SSSS....','...WWWWWW...','.W..WWWW..W.','.S..WWWW..S.','....PPPP....','..PP....PP..','..KK....KK..'];
+      
+      const girlF1 = ['....HHHH....','...HHHHHH...','..HHSSSSH...','..HHSSSS....','...BBBRB....','..BBBWWB....','..BBBBBBBB..','...BBBBBB...','....S..S....','....K..K....'];
+      const girlF2 = ['....HHHH....','...HHHHHH...','..HHSSSSH...','..HHSSSS....','...BBBRB....','..BBBWWB....','..BBBBBBBB..','...BBBBBB...','...S....S...','...K....K...'];
+
+      const runnerLayer = document.getElementById('runnerLayer');
+      const girlCanvas = document.createElement('canvas');
+      const boyCanvas = document.createElement('canvas');
+      girlCanvas.className = 'pixel';
+      boyCanvas.className = 'pixel';
+      
+      runnerLayer.appendChild(girlCanvas); 
+      runnerLayer.appendChild(boyCanvas);  
+
+      let isFrame1 = true;
+      if (!reduceMotion) {
+        setInterval(() => {
+          drawSprite(boyCanvas, isFrame1 ? boyF1 : boyF2, runPal, 5);
+          drawSprite(girlCanvas, isFrame1 ? girlF1 : girlF2, runPal, 5);
+          isFrame1 = !isFrame1;
+        }, 180); 
+      }
+    })();
   </script>
 </body>
 </html>
