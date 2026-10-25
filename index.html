@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sepotong Perayaan</title>
   <!-- Font Google Poppins -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Pixelify+Sans:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     * {
       box-sizing: border-box;
@@ -13,7 +13,7 @@
       padding: 0;
     }
     body {
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Pixelify Sans', 'Poppins', sans-serif;
       background: linear-gradient(135deg, #0f172a, #1e293b);
       color: #f8fafc;
       min-height: 100vh;
@@ -28,21 +28,6 @@
     canvas.pixel {
       image-rendering: pixelated;
       image-rendering: crisp-edges;
-    }
-    #starCanvas {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      z-index: 0;
-      pointer-events: none;
-      image-rendering: pixelated;
-    }
-    #moonSlot {
-      position: fixed;
-      top: 20px; right: 20px;
-      z-index: 0;
-      pointer-events: none;
-      animation: pxFloat 4s steps(1, end) infinite;
     }
     #heartLayer {
       position: fixed;
@@ -93,6 +78,34 @@
     @keyframes floatUp {
       from { transform: translateY(0); }
       to   { transform: translateY(-115vh); }
+    }
+
+    /* ===== VIDEO BACKGROUND (BARU) ===== */
+    #videoBg {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+      background: linear-gradient(#2f8fdc, #6cc0f0);   /* warna langit, tampil sebelum video siap */
+    }
+    #videoBg video {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 0.7s linear;
+    }
+    #videoBg video.on { opacity: 1; }
+    /* layar potret (HP): video ditaruh di dasar layar supaya dua karakter tetap kelihatan semua */
+    @media (max-aspect-ratio: 1/1) {
+      #videoBg video {
+        top: auto; bottom: 0; height: auto;
+        aspect-ratio: 16 / 9;
+        object-fit: contain;
+        -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 22%);
+        mask-image: linear-gradient(to bottom, transparent 0, #000 22%);
+      }
     }
 
     /* 1. Layar Awal (Tombol Klik Disini) */
@@ -172,7 +185,7 @@
 
     /* Kotak Musik Utama */
     .card {
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(15, 23, 42, 0.88);
       backdrop-filter: blur(10px);
       border: 1px solid rgba(255, 255, 255, 0.1);
       padding: 30px 20px;
@@ -257,13 +270,32 @@
       background: #475569;
       box-shadow: none;
     }
+
+    /* ===== FONT PIXEL ===== */
+    .modal-content h2 { font-size: 1.75rem; letter-spacing: 0.5px; }
+    .modal-content p  { font-size: 1.08rem; line-height: 1.55; }
+    h1 { font-size: 1.7rem; letter-spacing: 0.5px; }
+    p.subtitle { font-size: 1rem; }
+    .action-btn { font-size: 1.1rem; letter-spacing: 0.5px; }
+    .lyric-line { font-size: 1.1rem; }
+    .lyric-line.active { font-size: 1.3rem; }
+
+    /* layar potret: naikkan kartu & dialog supaya dua karakter di dasar layar tidak tertutup */
+    @media (max-aspect-ratio: 1/1) {
+      .modal { align-items: flex-start; padding-top: 9vh; }
+      .card.show { top: 14px; }
+    }
   </style>
 </head>
 <body>
 
   <!-- ===== LATAR PIXEL (BARU) ===== -->
-  <canvas id="starCanvas"></canvas>
-  <div id="moonSlot"></div>
+  <!-- VIDEO BACKGROUND (BARU): dua elemen video supaya loop bisa crossfade -->
+  <div id="videoBg" aria-hidden="true">
+    <video id="vidA" muted playsinline preload="auto" src="video-lari-loop.mp4"></video>
+    <video id="vidB" muted playsinline preload="auto" src="video-lari-loop.mp4"></video>
+  </div>
+
   <div id="heartLayer"></div>
   <canvas id="confettiCanvas"></canvas>
 
@@ -577,101 +609,6 @@
         return c;
       }
 
-      /* ---------- 1. Bintang berkedip + bintang jatuh ---------- */
-      const starCanvas = document.getElementById('starCanvas');
-      const sctx = starCanvas.getContext('2d');
-      const PX = 4;
-      const STAR_COLORS = ['#f8fafc', '#bae6fd', '#fbcfe8'];
-      let stars = [];
-      let shooting = null;
-
-      function initStars() {
-        starCanvas.width = window.innerWidth;
-        starCanvas.height = window.innerHeight;
-        const count = Math.floor((window.innerWidth * window.innerHeight) / 9000);
-        stars = Array.from({ length: count }, () => ({
-          x: Math.floor(Math.random() * window.innerWidth / PX) * PX,
-          y: Math.floor(Math.random() * window.innerHeight / PX) * PX,
-          big: Math.random() < 0.15,
-          phase: Math.random() * Math.PI * 2,
-          speed: 0.5 + Math.random() * 1.5,
-          color: STAR_COLORS[Math.floor(Math.random() * STAR_COLORS.length)]
-        }));
-      }
-
-      function drawStars(t) {
-        sctx.clearRect(0, 0, starCanvas.width, starCanvas.height);
-        stars.forEach(s => {
-          let a = 0.35 + 0.65 * ((Math.sin(t * s.speed + s.phase) + 1) / 2);
-          a = Math.round(a * 4) / 4; // dibuat bertingkat biar terasa "pixel"
-          sctx.globalAlpha = a;
-          sctx.fillStyle = s.color;
-          sctx.fillRect(s.x, s.y, PX, PX);
-          if (s.big) {
-            sctx.fillRect(s.x - PX, s.y, PX, PX);
-            sctx.fillRect(s.x + PX, s.y, PX, PX);
-            sctx.fillRect(s.x, s.y - PX, PX, PX);
-            sctx.fillRect(s.x, s.y + PX, PX, PX);
-          }
-        });
-
-        // Bintang jatuh
-        if (!reduceMotion) {
-          if (!shooting && Math.random() < 0.012) {
-            shooting = {
-              x: window.innerWidth * (0.4 + Math.random() * 0.6),
-              y: Math.random() * window.innerHeight * 0.35
-            };
-          }
-          if (shooting) {
-            for (let i = 0; i < 8; i++) {
-              sctx.globalAlpha = 1 - i / 8;
-              sctx.fillStyle = i === 0 ? '#ffffff' : '#bae6fd';
-              sctx.fillRect(
-                Math.round((shooting.x + i * 8) / PX) * PX,
-                Math.round((shooting.y - i * 4) / PX) * PX,
-                PX, PX
-              );
-            }
-            shooting.x -= 16;
-            shooting.y += 8;
-            if (shooting.x < -60 || shooting.y > window.innerHeight + 60) shooting = null;
-          }
-        }
-        sctx.globalAlpha = 1;
-      }
-
-      let lastStarFrame = 0;
-      function starLoop(ts) {
-        if (ts - lastStarFrame >= 80) { // ~12 fps, khas animasi pixel
-          lastStarFrame = ts;
-          drawStars(ts / 1000);
-        }
-        requestAnimationFrame(starLoop);
-      }
-      initStars();
-      window.addEventListener('resize', initStars);
-      requestAnimationFrame(starLoop);
-
-      /* ---------- 2. Bulan sabit pixel (pas dengan lirik "Rembulan") ---------- */
-      (function buildMoon() {
-        const N = 20;
-        const rows = [];
-        for (let y = 0; y < N; y++) {
-          let row = '';
-          for (let x = 0; x < N; x++) {
-            const d1 = Math.hypot(x - 9.5, y - 9.5);
-            const d2 = Math.hypot(x - 13.5, y - 6.5);
-            if (d1 <= 9 && d2 > 8) row += d1 > 7.5 ? 'S' : 'M';
-            else row += '.';
-          }
-          rows.push(row);
-        }
-        const scale = window.innerWidth < 480 ? 3 : 4;
-        const moon = makeSprite(rows, { M: '#fef9c3', S: '#fde68a' }, scale);
-        document.getElementById('moonSlot').appendChild(moon);
-      })();
-
       /* ---------- 3. Hati pixel melayang ke atas ---------- */
       const heartRows = [
         '.XX.XX.',
@@ -835,6 +772,45 @@
         burstConfetti(r.left + r.width / 2, r.top + r.height / 2, 90);
         setTimeout(() => burstConfetti(window.innerWidth / 2, window.innerHeight * 0.6, 70), 500);
       });
+    })();
+  </script>
+
+  <!-- LOOP VIDEO BACKGROUND (BARU) -->
+  <script>
+    (function () {
+      const a = document.getElementById('vidA');
+      const b = document.getElementById('vidB');
+      const FADE = 0.7;                 // detik crossfade di ujung loop
+      let cur = a, nxt = b, switching = false;
+
+      function play(v) { const p = v.play(); if (p && p.catch) p.catch(() => {}); }
+
+      cur.classList.add('on');
+      play(cur);
+      // kalau browser menahan autoplay, mulai saat pengguna menyentuh layar pertama kali
+      ['click', 'touchstart'].forEach(ev =>
+        document.addEventListener(ev, () => { if (cur.paused) play(cur); }, { once: true, passive: true }));
+
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        cur.addEventListener('loadeddata', () => cur.pause());
+        return;
+      }
+
+      function tick() {
+        const d = cur.duration;
+        if (d && !switching && cur.currentTime >= d - FADE) {
+          switching = true;
+          nxt.currentTime = 0;
+          play(nxt);
+          nxt.classList.add('on');
+          cur.classList.remove('on');
+          const old = cur;
+          cur = nxt; nxt = old;
+          setTimeout(() => { nxt.pause(); nxt.currentTime = 0; switching = false; }, FADE * 1000 + 100);
+        }
+        requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
     })();
   </script>
 </body>
