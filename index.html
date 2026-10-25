@@ -24,78 +24,58 @@
       overflow: hidden;
     }
 
-    /* ===== BORDER BAWAH SEBAGAI PIJAKAN TANAH/RUMPUT ===== */
-    .bottom-border {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 25px;
-      background: #854d0e; /* Warna tanah */
-      border-top: 6px solid #4ade80; /* Warna rumput hijau pixel */
-      z-index: 3999;
-    }
-
-    /* ===== ANIMASI VIDEO BERLARI ===== */
-    #runnerLayer {
-      position: fixed;
-      bottom: 25px; /* Posisinya pas di atas border rumput */
-      left: -400px; /* Memulai pergerakan dari luar layar sebelah kiri */
-      z-index: 4000;
-      pointer-events: none;
-      /* Animasi bergerak mulus dari kiri ke kanan */
-      animation: runAcross 15s linear infinite; /* Diperlambat jadi 15s agar durasi video pas */
-    }
-    #runnerLayer video {
-      height: 180px; /* Sesuaikan ukuran tingginya agar pas */
-      border-radius: 12px; /* Membuat sudut video agak membulat */
-      box-shadow: 0 8px 20px rgba(0,0,0,0.4); /* Memberikan efek bayangan */
-    }
-    @keyframes runAcross {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(calc(100vw + 600px)); }
-    }
-
-    /* ===== PIXEL LAYERS (BINTANG, BULAN, HATI, DLL) ===== */
+    /* ===== PIXEL LAYERS (BARU) ===== */
     canvas.pixel {
       image-rendering: pixelated;
       image-rendering: crisp-edges;
     }
     #starCanvas {
       position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      z-index: 0; pointer-events: none;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
       image-rendering: pixelated;
     }
     #moonSlot {
       position: fixed;
       top: 20px; right: 20px;
-      z-index: 0; pointer-events: none;
+      z-index: 0;
+      pointer-events: none;
       animation: pxFloat 4s steps(1, end) infinite;
     }
     #heartLayer {
       position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      overflow: hidden; z-index: 0; pointer-events: none;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      overflow: hidden;
+      z-index: 0;
+      pointer-events: none;
     }
     .float-heart {
       position: absolute;
-      bottom: -40px; opacity: 0.55;
+      bottom: -40px;
+      opacity: 0.55;
       animation: floatUp 9s steps(45, end) forwards;
     }
     #confettiCanvas {
       position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      z-index: 5000; pointer-events: none;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 5000;
+      pointer-events: none;
     }
     .pixel-slot {
-      display: flex; justify-content: center; margin-bottom: 14px;
+      display: flex;
+      justify-content: center;
+      margin-bottom: 14px;
     }
     .pixel-bounce {
       animation: pxBounce 0.8s steps(1, end) infinite;
     }
     #eqCanvas {
-      display: block; margin: 0 auto 14px;
+      display: block;
+      margin: 0 auto 14px;
       image-rendering: pixelated;
     }
     @keyframes pxFloat {
@@ -115,66 +95,44 @@
       to   { transform: translateY(-115vh); }
     }
 
-    /* ===== ANIMASI FOTO POLAROID ===== */
-    .polaroid-frame {
-      position: fixed;
-      top: -150%;
-      left: 50%;
-      transform: translateX(-50%) rotate(0deg);
-      background: white;
-      padding: 15px 15px 40px 15px;
-      border-radius: 10px;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.6);
-      z-index: 0; 
-      width: 280px;
-      transition: top 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-      animation: polaroidFloat 5s ease-in-out infinite;
-    }
-    .polaroid-frame.show {
-      top: 5%; 
-    }
-    .polaroid-frame img {
-      width: 100%;
-      border-radius: 5px;
-      image-rendering: crisp-edges;
-    }
-    .polaroid-text {
-      color: #0f172a;
-      font-family: 'Poppins', sans-serif;
-      font-weight: 600;
-      text-align: center;
-      margin-top: 15px;
-      font-size: 1.1rem;
-    }
-    @keyframes polaroidFloat {
-      0%, 100% { transform: translateX(-50%) translateY(0) rotate(-2deg); }
-      50% { transform: translateX(-50%) translateY(-15px) rotate(2deg); }
-    }
-
-    /* 1. Layar Awal */
+    /* 1. Layar Awal (Tombol Klik Disini) */
     .intro-screen {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: transparent; 
-      display: flex; justify-content: center; align-items: center;
-      z-index: 3000; transition: opacity 0.5s ease, visibility 0.5s ease;
+      background: transparent; /* transparan supaya bintang & bulan pixel kelihatan */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 3000;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
     }
     .intro-screen.hidden {
-      opacity: 0; visibility: hidden; pointer-events: none;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
     }
 
-    /* Modal Layar Penuh */
+    /* Modal Layar Penuh (Dasar) */
     .modal {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: transparent; display: none; 
-      justify-content: center; align-items: center; z-index: 1000;
+      background: transparent; /* transparan supaya latar pixel kelihatan */
+      display: none; /* Sembunyikan secara default agar tidak numpuk */
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
     }
-    .modal.show { display: flex; }
+    .modal.show {
+      display: flex; /* Hanya tampil jika ada class 'show' */
+    }
     
     .modal-content {
-      background: #1e293b; padding: 40px 30px; border-radius: 20px;
-      text-align: center; max-width: 320px; width: 90%;
+      background: #1e293b;
+      padding: 40px 30px;
+      border-radius: 20px;
+      text-align: center;
+      max-width: 320px;
+      width: 90%;
       border: 1px solid rgba(255, 255, 255, 0.1);
       box-shadow: 0 20px 40px rgba(0,0,0,0.5);
       animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -184,83 +142,144 @@
       to { transform: scale(1); opacity: 1; }
     }
     
-    .step-box { display: none; }
-    .step-box.active { display: block; }
-    .slide { display: none; }
-    .slide.active { display: block; }
+    /* Logika Tampilan Step / Bagian di dalam Modal */
+    .step-box {
+      display: none;
+    }
+    .step-box.active {
+      display: block;
+    }
+
+    /* Slide Kartu Ucapan */
+    .slide {
+      display: none;
+    }
+    .slide.active {
+      display: block;
+    }
     
-    .modal-content h2 { color: #ff4b91; margin-bottom: 15px; font-size: 1.5rem; }
-    .modal-content p { color: #cbd5e1; font-size: 0.95rem; line-height: 1.6; margin-bottom: 25px; }
+    .modal-content h2 {
+      color: #ff4b91;
+      margin-bottom: 15px;
+      font-size: 1.5rem;
+    }
+    .modal-content p {
+      color: #cbd5e1;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 25px;
+    }
 
     /* Kotak Musik Utama */
     .card {
-      background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.1); padding: 30px 20px;
-      border-radius: 20px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-      text-align: center; max-width: 400px; width: 100%;
-      display: none; position: absolute; z-index: 1;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 30px 20px;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      text-align: center;
+      max-width: 400px;
+      width: 100%;
+      display: none; /* Sembunyikan di awal */
+      position: absolute;
+      z-index: 1;
     }
-    .card.show { display: block; }
-    .icon { font-size: 2.5rem; margin-bottom: 10px; }
-    h1 { font-size: 1.5rem; color: #ffffff; font-weight: 600; }
-    p.subtitle { font-size: 0.85rem; color: #94a3b8; margin-bottom: 20px; }
-    audio { width: 100%; border-radius: 30px; margin-bottom: 20px; outline: none; }
+    .card.show {
+      display: block;
+    }
+    .icon {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+    h1 {
+      font-size: 1.5rem;
+      color: #ffffff;
+      font-weight: 600;
+    }
+    p.subtitle {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      margin-bottom: 20px;
+    }
+    audio {
+      width: 100%;
+      border-radius: 30px;
+      margin-bottom: 20px;
+      outline: none;
+    }
     
     /* Area Lirik */
     .lyrics-container {
-      height: 160px; overflow-y: auto; scroll-behavior: smooth; padding: 20px 0;
+      height: 160px;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+      padding: 20px 0;
       mask-image: linear-gradient(to bottom, transparent, black 25%, black 75%, transparent);
       -webkit-mask-image: linear-gradient(to bottom, transparent, black 25%, black 75%, transparent);
     }
-    .lyrics-container::-webkit-scrollbar { display: none; }
+    .lyrics-container::-webkit-scrollbar {
+      display: none;
+    }
     .lyric-line {
-      font-size: 0.95rem; color: #64748b; margin: 14px 0; transition: all 0.3s ease; opacity: 0.4;
+      font-size: 0.95rem;
+      color: #64748b;
+      margin: 14px 0;
+      transition: all 0.3s ease;
+      opacity: 0.4;
     }
     .lyric-line.active {
-      color: #38bdf8; font-weight: 600; font-size: 1.1rem; opacity: 1; transform: scale(1.05);
+      color: #38bdf8;
+      font-weight: 600;
+      font-size: 1.1rem;
+      opacity: 1;
+      transform: scale(1.05);
     }
 
     /* Gaya Tombol */
     .action-btn {
       background: linear-gradient(135deg, #ff4b91, #ff0060);
-      color: white; border: none; padding: 12px 25px; border-radius: 25px;
-      font-size: 1rem; font-weight: 600; cursor: pointer;
-      box-shadow: 0 4px 15px rgba(255, 0, 96, 0.4); transition: transform 0.3s ease; margin: 5px;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 25px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(255, 0, 96, 0.4);
+      transition: transform 0.3s ease;
+      margin: 5px;
     }
-    .action-btn:hover { transform: scale(1.08); }
-    .btn-secondary { background: #475569; box-shadow: none; }
+    .action-btn:hover {
+      transform: scale(1.08);
+    }
+    .btn-secondary {
+      background: #475569;
+      box-shadow: none;
+    }
   </style>
 </head>
 <body>
 
-  <!-- ===== LATAR PIXEL ===== -->
+  <!-- ===== LATAR PIXEL (BARU) ===== -->
   <canvas id="starCanvas"></canvas>
   <div id="moonSlot"></div>
   <div id="heartLayer"></div>
   <canvas id="confettiCanvas"></canvas>
 
-  <!-- ===== BORDER PIJAKAN BAWAH ===== -->
-  <div class="bottom-border"></div>
-  
-  <!-- ===== ANIMASI VIDEO BERLARI ===== -->
-  <div id="runnerLayer">
-    <video autoplay loop muted playsinline>
-      <source src="video-lari.mp4" type="video/mp4">
-    </video>
-  </div>
-
   <!-- Audio Backsound -->
   <audio id="bgmPlayer" loop src="backsound.mp3"></audio>
 
-  <!-- TAHAP 0: Layar Awal -->
+  <!-- TAHAP 0: Layar Awal (Tombol Klik Disini) -->
   <div id="introScreen" class="intro-screen">
     <button id="btnKlikDisini" class="action-btn">Klik Disini ❤️</button>
   </div>
 
-  <!-- TAHAP 1: Kotak Dialog Earphone -->
+  <!-- TAHAP 1: Kotak Dialog Utama (Pengecekan Earphone & Percabangan) -->
   <div id="earphoneScreen" class="modal">
     <div class="modal-content">
       
+      <!-- Box 1: Pertanyaan Awal -->
       <div class="step-box active" id="stepAwal">
         <h2>Siapkan earphone-nya maniezz 🎧</h2>
         <p style="margin-bottom: 10px;">Udah dipake earphone-nya?</p>
@@ -270,6 +289,7 @@
         </div>
       </div>
 
+      <!-- Box 2: Cabang "Tidak" (Ngeyel!) -->
       <div class="step-box" id="stepNgeyel">
         <h2>Ngeyel! 🛑</h2>
         <p style="margin-bottom: 20px;"><strong>PAKEE NGGAAAA, KU TONJOK LU ISHHH KALO GAK DIPAKE 😡</strong></p>
@@ -279,6 +299,7 @@
         </div>
       </div>
 
+      <!-- Box 3: Cabang "Biarin" (Allahurabb..) -->
       <div class="step-box" id="stepAllahurabb">
         <h2>Allahurabb.. 😭</h2>
         <p style="margin-bottom: 20px;"><strong>PAKEE NGGAAKKK!! 🤬</strong></p>
@@ -288,6 +309,7 @@
         </div>
       </div>
 
+      <!-- Box 4: Layar Transisi "Cusss" -->
       <div class="step-box" id="stepReady">
         <h2>Oke, Dah ready yakk? 😎</h2>
         <p style="margin-bottom: 25px;">Iqro' Ishhh, jangan cepet-cepet! </p>
@@ -297,30 +319,36 @@
     </div>
   </div>
 
-  <!-- TAHAP 2: Kartu Ucapan Pop-Up -->
+  <!-- TAHAP 2: Kartu Ucapan Pop-Up (Multi-Slide) -->
   <div id="greetingModal" class="modal">
     <div class="modal-content">
       
+      <!-- Slide 1 -->
       <div class="slide active" id="slide1">
+        <!-- Kue ulang tahun pixel (BARU) -->
         <div id="cakeSlot" class="pixel-slot"></div>
         <h2>Hai Ishhh! 👋</h2>
         <p>Hari ini hari spesial-mu nihh. Cieee yang udah tuwirr yahahahah</p>
         <button class="action-btn next-btn" data-next="2">Lanjut ➡️</button>
       </div>
 
+      <!-- Slide 2 -->
       <div class="slide" id="slide2">
         <h2>Doa Untukmu 🎉</h2>
         <p>Semoga panjang umur, sehat selalu, makin dimudahkan rezekinya, dan terus jadi orang baik meskipun ngomel-ngomel mulu.</p>
         <button class="action-btn next-btn" data-next="3">Lanjut ➡️</button>
       </div>
 
+      <!-- Slide 3 -->
       <div class="slide" id="slide3">
         <h2>Harapan 💖</h2>
         <p>Semoga semua hal baik yang sedang kamu semogakan segera tersemogakan tahun ini yakk. Aamiin ✨</p>
         <button class="action-btn next-btn" data-next="4">Lanjut ➡️</button>
       </div>
 
+      <!-- Slide 4 -->
       <div class="slide" id="slide4">
+        <!-- Kotak hadiah pixel (BARU) -->
         <div id="giftSlot" class="pixel-slot"></div>
         <h2>Tambahan hehe</h2>
         <p>Lagu ini kuciptain khusus untuk kowe, The One and Only Aisyah Nurul Fadilah✨</p>
@@ -330,25 +358,21 @@
     </div>
   </div>
 
-  <!-- ===== ANIMASI POLAROID ASLI ===== -->
-  <div id="polaroid" class="polaroid-frame">
-    <img src="1000835110.jpg" alt="Memory">
-    <div class="polaroid-text">For Aisyah 💙</div>
-  </div>
-
   <!-- TAHAP 3: Kotak Pemutar Musik & Lirik -->
   <div class="card" id="musicCard">
     <div class="icon">🎵</div>
     <h1>Kikik Ganteng-Sepotong Perayaan</h1>
     <p class="subtitle">Selamat Ulang Taun Memettt</p>
 
+    <!-- Equalizer pixel (BARU) -->
     <canvas id="eqCanvas" width="180" height="40"></canvas>
+    
     <audio id="mainAudioPlayer" controls src="Sepotong Perayaan.mp3"></audio>
 
+    <!-- Wadah Lirik -->
     <div class="lyrics-container" id="lyricsContainer"></div>
   </div>
 
-  <!-- SCRIPT UNTUK MODAL, LIRIK, DAN AUDIO -->
   <script>
     const lyricsData = [
       { time: 0, text: "Selamat Malam,🌙" },
@@ -373,9 +397,11 @@
     const bgmPlayer = document.getElementById('bgmPlayer');
     const container = document.getElementById('lyricsContainer');
     
+    // Pastikan volume 100%
     mainAudio.volume = 1.0;
     bgmPlayer.volume = 1.0;
     
+    // Elemen Layar
     const introScreen = document.getElementById('introScreen');
     const btnKlikDisini = document.getElementById('btnKlikDisini');
 
@@ -397,6 +423,7 @@
     const btnHadiah = document.getElementById('btnHadiah');
     const musicCard = document.getElementById('musicCard');
 
+    // Memuat daftar lirik ke HTML
     lyricsData.forEach((item, index) => {
       const p = document.createElement('p');
       p.classList.add('lyric-line');
@@ -405,6 +432,7 @@
       container.appendChild(p);
     });
 
+    // Logika Sorot Lirik Berjalan
     mainAudio.addEventListener('timeupdate', () => {
       const currentTime = mainAudio.currentTime;
       let activeIndex = -1;
@@ -412,7 +440,9 @@
       for (let i = 0; i < lyricsData.length; i++) {
         if (currentTime >= lyricsData[i].time) {
           activeIndex = i;
-        } else { break; }
+        } else {
+          break;
+        }
       }
 
       if (activeIndex !== -1) {
@@ -429,6 +459,9 @@
       }
     });
 
+    // --- LOGIKA PERCABANGAN DIALOG EARPHONES (SATU PERSATU) ---
+
+    // Fungsi helper untuk mengganti step aktif di dalam satu modal earphone
     function pindahStep(targetStep) {
       [stepAwal, stepNgeyel, stepAllahurabb, stepReady].forEach(step => {
         step.classList.remove('active');
@@ -436,53 +469,91 @@
       targetStep.classList.add('active');
     }
 
+    // 1. Klik Tombol "Klik Disini" di Awal
     btnKlikDisini.addEventListener('click', () => {
       introScreen.classList.add('hidden');
       earphoneScreen.classList.add('show');
     });
 
-    btnYa.addEventListener('click', () => { pindahStep(stepReady); });
-    btnTidak.addEventListener('click', () => { pindahStep(stepNgeyel); });
-    btnIyaKupake.addEventListener('click', () => { pindahStep(stepReady); });
-    btnBiarin.addEventListener('click', () => { pindahStep(stepAllahurabb); });
-    btnIyee.addEventListener('click', () => { pindahStep(stepReady); });
-    btnYaudah.addEventListener('click', () => { pindahStep(stepReady); });
-
-    btnCus.addEventListener('click', () => {
-      earphoneScreen.classList.remove('show');
-      bgmPlayer.play().catch(e => console.log("BGM diblokir browser", e));
-      setTimeout(() => { modal.classList.add('show'); }, 300);
+    // 2. Jika pilih "Ya" di awal -> langsung ke step "Ready"
+    btnYa.addEventListener('click', () => {
+      pindahStep(stepReady);
     });
 
+    // 3. Jika pilih "Tidak" di awal -> pindah ke step "Ngeyel!"
+    btnTidak.addEventListener('click', () => {
+      pindahStep(stepNgeyel);
+    });
+
+    // 4. Jika di step "Ngeyel!" pilih "Iya ini kupake" -> ke step "Ready"
+    btnIyaKupake.addEventListener('click', () => {
+      pindahStep(stepReady);
+    });
+
+    // 5. Jika di step "Ngeyel!" pilih "Biarin" -> pindah ke step "Allahurabb.."
+    btnBiarin.addEventListener('click', () => {
+      pindahStep(stepAllahurabb);
+    });
+
+    // 6. Jika di step "Allahurabb.." pilih tombol "Iyee" / "Yaudah" -> ke step "Ready"
+    btnIyee.addEventListener('click', () => {
+      pindahStep(stepReady);
+    });
+    btnYaudah.addEventListener('click', () => {
+      pindahStep(stepReady);
+    });
+
+    // --- TRANSISI LANJUTAN SETELAH CUSSS ---
+
+    // Saat tombol "CUSSSS" ditekan -> tutup modal earphone, putar BGM, dan buka Kartu Ucapan
+    btnCus.addEventListener('click', () => {
+      earphoneScreen.classList.remove('show');
+      
+      // Memutar BGM backsound
+      bgmPlayer.play().catch(e => console.log("BGM diblokir browser", e));
+
+      setTimeout(() => {
+        modal.classList.add('show');
+      }, 300);
+    });
+
+    // Logika Pindah Slide Kartu Ucapan
     const nextBtns = document.querySelectorAll('.next-btn');
     const slides = document.querySelectorAll('.slide');
 
     nextBtns.forEach(btn => {
       btn.addEventListener('click', (e) => {
         const nextSlideId = e.target.getAttribute('data-next');
-        slides.forEach(slide => { slide.classList.remove('active'); });
+        
+        slides.forEach(slide => {
+          slide.classList.remove('active');
+        });
+        
         document.getElementById(`slide${nextSlideId}`).classList.add('active');
       });
     });
 
-    // Menampilkan Hadiah & Memunculkan Foto Polaroid
+    // Tombol "Ini Hadiahmu" Ditekan -> Matikan BGM, Nyalakan Musik Utama & Lirik
     btnHadiah.addEventListener('click', () => {
       modal.classList.remove('show');
+      
       bgmPlayer.pause();
       bgmPlayer.currentTime = 0;
       
       setTimeout(() => {
         musicCard.classList.add('show');
-        document.getElementById('polaroid').classList.add('show'); 
       }, 400);
     });
   </script>
 
-  <!-- PIXEL ANIMATION SCRIPT -->
+  <!-- =====================================================
+       PIXEL ANIMATION (BARU)
+       ===================================================== -->
   <script>
     (function () {
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+      /* ---------- Helper menggambar sprite pixel ---------- */
       function drawSprite(canvas, rows, palette, scale) {
         const w = rows[0].length, h = rows.length;
         canvas.width = w * scale;
@@ -506,7 +577,7 @@
         return c;
       }
 
-      /* ---------- 1. Bintang ---------- */
+      /* ---------- 1. Bintang berkedip + bintang jatuh ---------- */
       const starCanvas = document.getElementById('starCanvas');
       const sctx = starCanvas.getContext('2d');
       const PX = 4;
@@ -532,7 +603,7 @@
         sctx.clearRect(0, 0, starCanvas.width, starCanvas.height);
         stars.forEach(s => {
           let a = 0.35 + 0.65 * ((Math.sin(t * s.speed + s.phase) + 1) / 2);
-          a = Math.round(a * 4) / 4; 
+          a = Math.round(a * 4) / 4; // dibuat bertingkat biar terasa "pixel"
           sctx.globalAlpha = a;
           sctx.fillStyle = s.color;
           sctx.fillRect(s.x, s.y, PX, PX);
@@ -544,6 +615,7 @@
           }
         });
 
+        // Bintang jatuh
         if (!reduceMotion) {
           if (!shooting && Math.random() < 0.012) {
             shooting = {
@@ -571,7 +643,7 @@
 
       let lastStarFrame = 0;
       function starLoop(ts) {
-        if (ts - lastStarFrame >= 80) { 
+        if (ts - lastStarFrame >= 80) { // ~12 fps, khas animasi pixel
           lastStarFrame = ts;
           drawStars(ts / 1000);
         }
@@ -581,7 +653,7 @@
       window.addEventListener('resize', initStars);
       requestAnimationFrame(starLoop);
 
-      /* ---------- 2. Bulan Sabit ---------- */
+      /* ---------- 2. Bulan sabit pixel (pas dengan lirik "Rembulan") ---------- */
       (function buildMoon() {
         const N = 20;
         const rows = [];
@@ -600,8 +672,15 @@
         document.getElementById('moonSlot').appendChild(moon);
       })();
 
-      /* ---------- 3. Hati ---------- */
-      const heartRows = ['.XX.XX.', 'XHXXXXX', 'XXXXXXX', '.XXXXX.', '..XXX..', '...X...'];
+      /* ---------- 3. Hati pixel melayang ke atas ---------- */
+      const heartRows = [
+        '.XX.XX.',
+        'XHXXXXX',
+        'XXXXXXX',
+        '.XXXXX.',
+        '..XXX..',
+        '...X...'
+      ];
       const heartPal = { X: '#ff4b91', H: '#ffb3d1' };
       const heartLayer = document.getElementById('heartLayer');
 
@@ -616,14 +695,28 @@
       }
       if (!reduceMotion) setInterval(spawnHeart, 1400);
 
-      /* ---------- 4. Kue Ulang Tahun ---------- */
-      const flameA = ['.......F.......', '......OFO......'];
-      const flameB = ['......F........', '.....OFO.......'];
+      /* ---------- 4. Kue ulang tahun dengan lilin berkedip ---------- */
+      const flameA = [
+        '.......F.......',
+        '......OFO......'
+      ];
+      const flameB = [
+        '......F........',
+        '.....OFO.......'
+      ];
       const cakeBody = [
-        '.......W.......', '.......R.......', '..LLLLLLLLLLL..',
-        '.PPPPPPPPPPPPP.', '.PLPLPLPLPLPLP.', '.CCCCCCCCCCCCC.',
-        '.CCCCCCCCCCCCC.', '.CCbCCbCCbCCbC.', '.CCCCCCCCCCCCC.',
-        '.PPPPPPPPPPPPP.', 'BBBBBBBBBBBBBBB', '.BBBBBBBBBBBBB.'
+        '.......W.......',
+        '.......R.......',
+        '..LLLLLLLLLLL..',
+        '.PPPPPPPPPPPPP.',
+        '.PLPLPLPLPLPLP.',
+        '.CCCCCCCCCCCCC.',
+        '.CCCCCCCCCCCCC.',
+        '.CCbCCbCCbCCbC.',
+        '.CCCCCCCCCCCCC.',
+        '.PPPPPPPPPPPPP.',
+        'BBBBBBBBBBBBBBB',
+        '.BBBBBBBBBBBBB.'
       ];
       const cakePal = {
         F: '#fde047', O: '#fb923c', W: '#f8fafc', R: '#ff4b91',
@@ -641,19 +734,28 @@
         setInterval(() => { flameToggle = !flameToggle; drawCake(); }, 300);
       }
 
-      /* ---------- 5. Kotak Hadiah ---------- */
+      /* ---------- 5. Kotak hadiah pixel yang loncat-loncat ---------- */
       const giftRows = [
-        '..RRR..RRR..', '..R.RRRR.R..', '....RRRR....',
-        'LLLLLRRLLLLL', 'LLLLLRRLLLLL', 'DDDDDRRDDDDD',
-        '.BBBBRRBBBB.', '.BBBBRRBBBB.', '.BBBBRRBBBB.',
-        '.BBBBRRBBBB.', '.BBBBRRBBBB.', '.DDDDDDDDDD.'
+        '..RRR..RRR..',
+        '..R.RRRR.R..',
+        '....RRRR....',
+        'LLLLLRRLLLLL',
+        'LLLLLRRLLLLL',
+        'DDDDDRRDDDDD',
+        '.BBBBRRBBBB.',
+        '.BBBBRRBBBB.',
+        '.BBBBRRBBBB.',
+        '.BBBBRRBBBB.',
+        '.BBBBRRBBBB.',
+        '.DDDDDDDDDD.'
       ];
       const giftPal = { R: '#fde047', B: '#ff4b91', D: '#e11d6a', L: '#ff7eb3' };
       document.getElementById('giftSlot').appendChild(
         makeSprite(giftRows, giftPal, 7, reduceMotion ? '' : 'pixel-bounce')
       );
 
-      /* ---------- 6. Equalizer Musik ---------- */
+      /* ---------- 6. Equalizer pixel di kartu musik ---------- */
+      const mainAudio = document.getElementById('mainAudioPlayer');
       const eqCanvas = document.getElementById('eqCanvas');
       const eq = eqCanvas.getContext('2d');
       const BARS = 10, BW = 10, BGp = 6, BH = 6, BGAP = 2, MAXB = 5;
@@ -680,7 +782,7 @@
       }, 140);
       drawEq();
 
-      /* ---------- 7. Confetti ---------- */
+      /* ---------- 7. Confetti pixel saat tombol "Ini Hadiahmu" ---------- */
       const confCanvas = document.getElementById('confettiCanvas');
       const cctx = confCanvas.getContext('2d');
       const CONF_COLORS = ['#ff4b91', '#fde047', '#38bdf8', '#a78bfa', '#4ade80', '#fb923c'];
