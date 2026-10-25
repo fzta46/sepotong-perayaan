@@ -24,58 +24,78 @@
       overflow: hidden;
     }
 
-    /* ===== PIXEL LAYERS ===== */
+    /* ===== BORDER BAWAH SEBAGAI PIJAKAN TANAH/RUMPUT ===== */
+    .bottom-border {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 25px;
+      background: #854d0e; /* Warna tanah */
+      border-top: 6px solid #4ade80; /* Warna rumput hijau pixel */
+      z-index: 3999;
+    }
+
+    /* ===== ANIMASI VIDEO BERLARI ===== */
+    #runnerLayer {
+      position: fixed;
+      bottom: 25px; /* Posisinya pas di atas border rumput */
+      left: -400px; /* Memulai pergerakan dari luar layar sebelah kiri */
+      z-index: 4000;
+      pointer-events: none;
+      /* Animasi bergerak mulus dari kiri ke kanan */
+      animation: runAcross 15s linear infinite; /* Diperlambat jadi 15s agar durasi video pas */
+    }
+    #runnerLayer video {
+      height: 180px; /* Sesuaikan ukuran tingginya agar pas */
+      border-radius: 12px; /* Membuat sudut video agak membulat */
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4); /* Memberikan efek bayangan */
+    }
+    @keyframes runAcross {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(calc(100vw + 600px)); }
+    }
+
+    /* ===== PIXEL LAYERS (BINTANG, BULAN, HATI, DLL) ===== */
     canvas.pixel {
       image-rendering: pixelated;
       image-rendering: crisp-edges;
     }
     #starCanvas {
       position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      z-index: 0;
-      pointer-events: none;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 0; pointer-events: none;
       image-rendering: pixelated;
     }
     #moonSlot {
       position: fixed;
       top: 20px; right: 20px;
-      z-index: 0;
-      pointer-events: none;
+      z-index: 0; pointer-events: none;
       animation: pxFloat 4s steps(1, end) infinite;
     }
     #heartLayer {
       position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      overflow: hidden;
-      z-index: 0;
-      pointer-events: none;
+      top: 0; left: 0; width: 100%; height: 100%;
+      overflow: hidden; z-index: 0; pointer-events: none;
     }
     .float-heart {
       position: absolute;
-      bottom: -40px;
-      opacity: 0.55;
+      bottom: -40px; opacity: 0.55;
       animation: floatUp 9s steps(45, end) forwards;
     }
     #confettiCanvas {
       position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      z-index: 5000;
-      pointer-events: none;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 5000; pointer-events: none;
     }
     .pixel-slot {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 14px;
+      display: flex; justify-content: center; margin-bottom: 14px;
     }
     .pixel-bounce {
       animation: pxBounce 0.8s steps(1, end) infinite;
     }
     #eqCanvas {
-      display: block;
-      margin: 0 auto 14px;
+      display: block; margin: 0 auto 14px;
       image-rendering: pixelated;
     }
     @keyframes pxFloat {
@@ -131,60 +151,30 @@
       50% { transform: translateX(-50%) translateY(-15px) rotate(2deg); }
     }
 
-    /* ===== ANIMASI KARAKTER BERLARI ===== */
-    #runnerLayer {
-      position: fixed;
-      bottom: 30px;
-      left: -200px; 
-      display: flex;
-      gap: 25px; 
-      z-index: 4000;
-      pointer-events: none;
-      animation: runAcross 10s linear infinite;
-    }
-    @keyframes runAcross {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(calc(100vw + 350px)); }
-    }
-
     /* 1. Layar Awal */
     .intro-screen {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
       background: transparent; 
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 3000;
-      transition: opacity 0.5s ease, visibility 0.5s ease;
+      display: flex; justify-content: center; align-items: center;
+      z-index: 3000; transition: opacity 0.5s ease, visibility 0.5s ease;
     }
     .intro-screen.hidden {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
+      opacity: 0; visibility: hidden; pointer-events: none;
     }
 
     /* Modal Layar Penuh */
     .modal {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: transparent; 
-      display: none; 
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
+      background: transparent; display: none; 
+      justify-content: center; align-items: center; z-index: 1000;
     }
-    .modal.show {
-      display: flex; 
-    }
+    .modal.show { display: flex; }
     
     .modal-content {
-      background: #1e293b;
-      padding: 40px 30px;
-      border-radius: 20px;
-      text-align: center;
-      max-width: 320px;
-      width: 90%;
+      background: #1e293b; padding: 40px 30px; border-radius: 20px;
+      text-align: center; max-width: 320px; width: 90%;
       border: 1px solid rgba(255, 255, 255, 0.1);
       box-shadow: 0 20px 40px rgba(0,0,0,0.5);
       animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -196,107 +186,49 @@
     
     .step-box { display: none; }
     .step-box.active { display: block; }
-
     .slide { display: none; }
     .slide.active { display: block; }
     
-    .modal-content h2 {
-      color: #ff4b91;
-      margin-bottom: 15px;
-      font-size: 1.5rem;
-    }
-    .modal-content p {
-      color: #cbd5e1;
-      font-size: 0.95rem;
-      line-height: 1.6;
-      margin-bottom: 25px;
-    }
+    .modal-content h2 { color: #ff4b91; margin-bottom: 15px; font-size: 1.5rem; }
+    .modal-content p { color: #cbd5e1; font-size: 0.95rem; line-height: 1.6; margin-bottom: 25px; }
 
     /* Kotak Musik Utama */
     .card {
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 30px 20px;
-      border-radius: 20px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-      text-align: center;
-      max-width: 400px;
-      width: 100%;
-      display: none; 
-      position: absolute;
-      z-index: 1;
+      background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1); padding: 30px 20px;
+      border-radius: 20px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      text-align: center; max-width: 400px; width: 100%;
+      display: none; position: absolute; z-index: 1;
     }
-    .card.show {
-      display: block;
-    }
-    .icon {
-      font-size: 2.5rem;
-      margin-bottom: 10px;
-    }
-    h1 {
-      font-size: 1.5rem;
-      color: #ffffff;
-      font-weight: 600;
-    }
-    p.subtitle {
-      font-size: 0.85rem;
-      color: #94a3b8;
-      margin-bottom: 20px;
-    }
-    audio {
-      width: 100%;
-      border-radius: 30px;
-      margin-bottom: 20px;
-      outline: none;
-    }
+    .card.show { display: block; }
+    .icon { font-size: 2.5rem; margin-bottom: 10px; }
+    h1 { font-size: 1.5rem; color: #ffffff; font-weight: 600; }
+    p.subtitle { font-size: 0.85rem; color: #94a3b8; margin-bottom: 20px; }
+    audio { width: 100%; border-radius: 30px; margin-bottom: 20px; outline: none; }
     
     /* Area Lirik */
     .lyrics-container {
-      height: 160px;
-      overflow-y: auto;
-      scroll-behavior: smooth;
-      padding: 20px 0;
+      height: 160px; overflow-y: auto; scroll-behavior: smooth; padding: 20px 0;
       mask-image: linear-gradient(to bottom, transparent, black 25%, black 75%, transparent);
       -webkit-mask-image: linear-gradient(to bottom, transparent, black 25%, black 75%, transparent);
     }
     .lyrics-container::-webkit-scrollbar { display: none; }
     .lyric-line {
-      font-size: 0.95rem;
-      color: #64748b;
-      margin: 14px 0;
-      transition: all 0.3s ease;
-      opacity: 0.4;
+      font-size: 0.95rem; color: #64748b; margin: 14px 0; transition: all 0.3s ease; opacity: 0.4;
     }
     .lyric-line.active {
-      color: #38bdf8;
-      font-weight: 600;
-      font-size: 1.1rem;
-      opacity: 1;
-      transform: scale(1.05);
+      color: #38bdf8; font-weight: 600; font-size: 1.1rem; opacity: 1; transform: scale(1.05);
     }
 
     /* Gaya Tombol */
     .action-btn {
       background: linear-gradient(135deg, #ff4b91, #ff0060);
-      color: white;
-      border: none;
-      padding: 12px 25px;
-      border-radius: 25px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      box-shadow: 0 4px 15px rgba(255, 0, 96, 0.4);
-      transition: transform 0.3s ease;
-      margin: 5px;
+      color: white; border: none; padding: 12px 25px; border-radius: 25px;
+      font-size: 1rem; font-weight: 600; cursor: pointer;
+      box-shadow: 0 4px 15px rgba(255, 0, 96, 0.4); transition: transform 0.3s ease; margin: 5px;
     }
-    .action-btn:hover {
-      transform: scale(1.08);
-    }
-    .btn-secondary {
-      background: #475569;
-      box-shadow: none;
-    }
+    .action-btn:hover { transform: scale(1.08); }
+    .btn-secondary { background: #475569; box-shadow: none; }
   </style>
 </head>
 <body>
@@ -306,9 +238,16 @@
   <div id="moonSlot"></div>
   <div id="heartLayer"></div>
   <canvas id="confettiCanvas"></canvas>
+
+  <!-- ===== BORDER PIJAKAN BAWAH ===== -->
+  <div class="bottom-border"></div>
   
-  <!-- ===== ANIMASI KARAKTER BERLARI ===== -->
-  <div id="runnerLayer"></div>
+  <!-- ===== ANIMASI VIDEO BERLARI ===== -->
+  <div id="runnerLayer">
+    <video autoplay loop muted playsinline>
+      <source src="video-lari.mp4" type="video/mp4">
+    </video>
+  </div>
 
   <!-- Audio Backsound -->
   <audio id="bgmPlayer" loop src="backsound.mp3"></audio>
@@ -391,7 +330,7 @@
     </div>
   </div>
 
-  <!-- ===== ANIMASI POLAROID ===== -->
+  <!-- ===== ANIMASI POLAROID ASLI ===== -->
   <div id="polaroid" class="polaroid-frame">
     <img src="1000835110.jpg" alt="Memory">
     <div class="polaroid-text">For Aisyah 💙</div>
@@ -409,6 +348,7 @@
     <div class="lyrics-container" id="lyricsContainer"></div>
   </div>
 
+  <!-- SCRIPT UNTUK MODAL, LIRIK, DAN AUDIO -->
   <script>
     const lyricsData = [
       { time: 0, text: "Selamat Malam,🌙" },
@@ -533,12 +473,12 @@
       
       setTimeout(() => {
         musicCard.classList.add('show');
-        document.getElementById('polaroid').classList.add('show'); // Memanggil polaroid
+        document.getElementById('polaroid').classList.add('show'); 
       }, 400);
     });
   </script>
 
-  <!-- PIXEL ANIMATION -->
+  <!-- PIXEL ANIMATION SCRIPT -->
   <script>
     (function () {
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -793,36 +733,6 @@
         burstConfetti(r.left + r.width / 2, r.top + r.height / 2, 90);
         setTimeout(() => burstConfetti(window.innerWidth / 2, window.innerHeight * 0.6, 70), 500);
       });
-
-      /* ---------- 8. Animasi Karakter Berlari (Berdasarkan Gambar) ---------- */
-      const runPal = {
-        H: '#111827', S: '#fcd34d', W: '#f8fafc', P: '#1e3a8a',
-        K: '#000000', B: '#3b82f6', R: '#ef4444' 
-      };
-      
-      const boyF1 = ['....HHHH....','...HSSSSH...','...HSSSSH...','....SSSS....','...WWWWWW...','..W.WWWW.W..','..S.WWWW.S..','....PPPP....','...PP..PP...','...KK..KK...'];
-      const boyF2 = ['....HHHH....','...HSSSSH...','...HSSSSH...','....SSSS....','...WWWWWW...','.W..WWWW..W.','.S..WWWW..S.','....PPPP....','..PP....PP..','..KK....KK..'];
-      
-      const girlF1 = ['....HHHH....','...HHHHHH...','..HHSSSSH...','..HHSSSS....','...BBBRB....','..BBBWWB....','..BBBBBBBB..','...BBBBBB...','....S..S....','....K..K....'];
-      const girlF2 = ['....HHHH....','...HHHHHH...','..HHSSSSH...','..HHSSSS....','...BBBRB....','..BBBWWB....','..BBBBBBBB..','...BBBBBB...','...S....S...','...K....K...'];
-
-      const runnerLayer = document.getElementById('runnerLayer');
-      const girlCanvas = document.createElement('canvas');
-      const boyCanvas = document.createElement('canvas');
-      girlCanvas.className = 'pixel';
-      boyCanvas.className = 'pixel';
-      
-      runnerLayer.appendChild(girlCanvas); 
-      runnerLayer.appendChild(boyCanvas);  
-
-      let isFrame1 = true;
-      if (!reduceMotion) {
-        setInterval(() => {
-          drawSprite(boyCanvas, isFrame1 ? boyF1 : boyF2, runPal, 5);
-          drawSprite(girlCanvas, isFrame1 ? girlF1 : girlF2, runPal, 5);
-          isFrame1 = !isFrame1;
-        }, 180); 
-      }
     })();
   </script>
 </body>
