@@ -12,17 +12,24 @@
       margin: 0;
       padding: 0;
     }
-    body {
-      font-family: 'Pixelify Sans', 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #0f172a, #1e293b);
-      color: #f8fafc;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-      overflow: hidden;
-    }
+/* 1. Atur font default seluruh halaman ke Poppins biar lirik & teks ucapan bersih */
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  color: #f8fafc;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  overflow: hidden;
+}
+
+/* 2. Timpa khusus Judul & Tombol pake font Pixel */
+h1, h2, .action-btn {
+  font-family: 'Pixelify Sans', cursive;
+  letter-spacing: 1px;
+}
 
     /* ===== PIXEL LAYERS (BARU) ===== */
     canvas.pixel {
