@@ -4,17 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sepotong Perayaan</title>
-  <!-- Font Google Poppins -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Pixelify+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap" rel="stylesheet">
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
-/* 1. Atur font default seluruh halaman ke Poppins biar lirik & teks ucapan bersih */
 body {
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Jersey 10', sans-serif;
   background: linear-gradient(135deg, #0f172a, #1e293b);
   color: #f8fafc;
   min-height: 100vh;
@@ -25,12 +25,11 @@ body {
   overflow: hidden;
 }
 
-/* 2. Timpa khusus Judul & Tombol pake font Pixel */
-h1, h2, .action-btn {
-  font-family: 'Pixelify Sans', cursive;
-  letter-spacing: 1px;
+/* Terapkan secara spesifik pada elemen teks dan tombol interaktif */
+h1, h2, p, .action-btn, .lyric-line {
+  font-family: 'Jersey 10', sans-serif;
+  letter-spacing: 1px; 
 }
-
     /* ===== PIXEL LAYERS (BARU) ===== */
     canvas.pixel {
       image-rendering: pixelated;
